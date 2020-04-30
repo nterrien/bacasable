@@ -1,0 +1,48 @@
+<tr><td>
+    {{ article.label }}
+</td>
+<td>
+    {{ article.description }}
+</td>
+<td>
+    <!-- {{ getSubmitGroup(article) != "" ? getSubmitGroup(article).label : "Aucun" }} -->
+    <!-- Y'a une erreur ici, quand ça compile mais en vrai quand on test
+                            ça fait ce que je veux. En meme tmeps il est bizarre parce que justement le cas ou 
+                            c'est "" j'affiche Aucun et pas le label donc il devrait pas m'emebter
+                            Cela dit je devrait petu etre voir apres que le backend est fini car c'est juste
+                        on peux changer ce que retourne qunad y'a rein -->
+    {{ getSubmitGroup(article).label }}
+    <!-- Ça marche pareil mais je suis pas convaincu que ce soit la meillleur de façon de gerer les problemes -->
+</td>
+<td>
+    {{ article.comment }}
+</td>
+<td>
+    {{ article.unit }}
+</td>
+<td>
+    {{ article.minimal_quantity }}
+</td>
+<td>
+    {{ article.price }}
+</td>
+<td>
+    {{ article.percent_workforce }}
+</td>
+<td>
+    {{article.subcontractable ? ("Oui") : ("Non")}}
+</td>
+<td>
+    {{article.up_to_date ? ("Oui") : ("Non")}}
+</td>
+
+<td> {{getStatus(article).label}} </td>
+
+<td>
+    <a class="badge badge-warning" href="/articles/{{ article.id }}">
+        Editer
+    </a>
+    <button class="badge badge-danger mr-2" (click)="deleteArticle()">
+        Supprimer
+    </button>
+</td></tr>

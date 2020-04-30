@@ -1,0 +1,170 @@
+<div class="list row">
+    <div class="col-md-8">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search by label" [(ngModel)]="label" />
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" (click)="searchLabel()">Chercher</button>
+                <a routerLink="/articles/add" class="nav-link">Ajouter</a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <h4>Magasin</h4>
+        <table class="table table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th class="col-md-1" scope="col">Label</th>
+                    <th class="col-md-1" scope="col">Description</th>
+                    <th class="col-md-1" scope="col">Groupe de Soumission</th>
+                    <th class="col-md-1" scope="col">Commentaire</th>
+                    <th class="col-md-1" scope="col">Unité</th>
+                    <th class="col-md-1" scope="col">Quantité minimale</th>
+                    <th class="col-md-1" scope="col">Prix</th>
+                    <th class="col-md-1" scope="col">Pourcentage de main d'oeuvre</th>
+                    <th class="col-md-1" scope="col">Sous traitable</th>
+                    <th class="col-md-1" scope="col">À jour</th>
+                    <th class="col-md-1" scope="col">Status</th>
+                    <th class="col-md-1" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <div class="bg-dark" *ngFor="let volume of volumes;">
+                    <tr class="text-white">
+                        <td>
+                            {{ volume.label }}
+                        </td>
+                        <td>
+                            {{ volume.comment }}
+                        </td>
+                    </tr>
+                    <div class="bg-secondary" *ngFor="let section of volume.sections;">
+                        <tr class="text-white">
+                            <td>
+                                {{ section.label }}
+                            </td>
+                            <td>
+                                {{ section.comment }}
+                            </td>
+                        </tr>
+                        <div class="bg-danger text-black" *ngFor="let item of section.items;">
+                            <tr>
+                                <td>
+                                    {{ item.label }}
+                                </td>
+                                <td>
+                                    {{ item.comment }}
+                                </td>
+                                <td>{{item.articles}}</td>
+                            </tr>
+                            <tr class="bg-white text-black" *ngFor=" let article of item.articles">
+                                <td>
+                                    {{ article.label }}
+                                </td>
+                                <td>
+                                    {{ article.description }}
+                                </td>
+                                <td>
+                                   {{ getSubmitGroup(article).label }}
+                                    </td>
+                                <td>
+                                    {{ article.comment }}
+                                </td>
+                                <td>
+                                    {{ article.unit }}
+                                </td>
+                                <td>
+                                    {{ article.minimal_quantity }}
+                                </td>
+                                <td>
+                                    {{ article.price }}
+                                </td>
+                                <td>
+                                    {{ article.percent_workforce }}
+                                </td>
+                                <td>
+                                    {{article.subcontractable ? ("Oui") : ("Non")}}
+                                </td>
+                                <td>
+                                    {{article.up_to_date ? ("Oui") : ("Non")}}
+                                </td>
+
+                                <td> {{getStatus(article).label}} </td>
+
+                                <td>
+                                    <a class="badge badge-warning" href="/articles/{{ article.id }}">
+                                        Editer
+                                    </a>
+                                    <button class="badge badge-danger mr-2" (click)="deleteArticle(article.id)">
+                                        Supprimer
+                                    </button>
+                                    </td>
+                            </tr>
+                        </div>
+                    </div>
+                </div> -->
+
+
+
+
+
+
+                <tr class="bg-white text-black" *ngFor=" let article of articles">
+                    <!-- <app-article-single [article]="article" *ngFor="let article of articles" ></app-article-single> -->
+                    <td>
+                        {{ article.label }}
+                    </td>
+                    <td>
+                        {{ article.description }}
+                    </td>
+                    <td>
+                        <!-- {{ getSubmitGroup(article) != "" ? getSubmitGroup(article).label : "Aucun" }} -->
+                        <!-- Y'a une erreur ici, quand ça compile mais en vrai quand on test
+                                                            ça fait ce que je veux. En meme tmeps il est bizarre parce que justement le cas ou 
+                                                            c'est "" j'affiche Aucun et pas le label donc il devrait pas m'emebter
+                                                            Cela dit je devrait petu etre voir apres que le backend est fini car c'est juste
+                                                        on peux changer ce que retourne qunad y'a rein -->
+                        {{ getSubmitGroup(article).label }}
+                        <!-- Ça marche pareil mais je suis pas convaincu que ce soit la meillleur de façon de gerer les problemes -->
+                    </td>
+                    <td>
+                        {{ article.comment }}
+                    </td>
+                    <td>
+                        {{ article.unit }}
+                    </td>
+                    <td>
+                        {{ article.minimal_quantity }}
+                    </td>
+                    <td>
+                        {{ article.price }}
+                    </td>
+                    <td>
+                        {{ article.percent_workforce }}
+                    </td>
+                    <td>
+                        {{article.subcontractable ? ("Oui") : ("Non")}}
+                    </td>
+                    <td>
+                        {{article.up_to_date ? ("Oui") : ("Non")}}
+                    </td>
+
+                    <td> {{getStatus(article).label}} </td>
+
+                    <td>
+                        <a class="badge badge-warning" href="/articles/{{ article.id }}">
+                            Editer
+                        </a>
+                        <button class="badge badge-danger mr-2" (click)="deleteArticle(article.id)">
+                            Supprimer
+                        </button>
+                        <!-- Pour tester qu'on vois bien Item Section et VOlme -->
+                        <!-- {{ getItem(article).label}}{{ getSection(article).label}}
+                                                        {{ getVolume(article).label}} -->
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="submit-form">
+
+    <div class="form-group">
+        <label for="id_item"> Poste </label>
+        <select id="id_item" class="form-control" required [(ngModel)]="article.id_item" name="id_item">
+            <option *ngFor="let item of items" value="{{item.id}}"> {{ item.label }}</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="label">Label</label>
+        <input type="text" class="form-control" id="label" required [(ngModel)]="article.label" name="label" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <input class="form-control" id="description" required [(ngModel)]="article.description" name="description" />
+        <!-- Pas recquired hein -->
+    </div>
+
+    <div class="form-group">
+        <label for="id_submit"> Groupe de Soumission </label>
+        <select id="id_submit" class="form-control" required [(ngModel)]="article.id_submit" name="id_submit">
+            <option *ngFor="let submit of submit_group" value="{{submit.id}}"> {{ submit.label }}</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="comment">Commentaire</label>
+        <input class="form-control" id="comment" required [(ngModel)]="article.comment" name="comment" />
+    </div><!-- Pas recquired hein -->
+
+    <div class="form-group">
+        <label for="unit">Unité</label>
+        <input class="form-control" id="unit" required [(ngModel)]="article.unit" name="unit" />
+    </div>
+
+    <div class="form-group">
+        <label for="minimal_quantity">Quantité minimale</label>
+        <input class="form-control" id="minimal_quantity" required [(ngModel)]="article.minimal_quantity"
+            name="minimal_quantity" /><!-- Pas recquired hein -->
+    </div>
+
+    <div class="form-group">
+        <label for="price">Prix</label>
+        <input class="form-control" id="price" required [(ngModel)]="article.price" name="price" />
+    </div><!-- Pas recquired hein -->
+
+    <div class="form-group">
+        <label for="percent_workforce">Pourcentage de main d'oeuvre</label>
+        <input class="form-control" id="percent_workforce" required [(ngModel)]="article.percent_workforce"
+            name="percent_workforce" /><!-- Pas recquired hein -->
+    </div>
+
+    <div class="form-group">
+        <label for="status"> Status </label>
+        <select id="status" class="form-control" required [(ngModel)]="article.status" name="status">
+            <option *ngFor="let service of services" value="{{service.id}}"> {{ service.label }}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="subcontractable"> Sous-traitable </label>
+        <select id="subcontractable" class="form-control" required [(ngModel)]="article.subcontractable"
+            name="subcontractable">
+            <option value="true"> Oui </option>
+            <option value="false"> Non </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="up_to_date"> À jour </label>
+        <select id="up_to_date" class="form-control" required [(ngModel)]="article.up_to_date" name="up_to_date">
+            <option value="true"> Oui </option>
+            <option value="false"> Non </option>
+        </select>
+    </div>
+
+    <button (click)="saveArticle()" class="btn btn-success">Soumettre</button>
+</div>
