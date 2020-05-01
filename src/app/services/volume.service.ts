@@ -35,17 +35,17 @@ export class VolumeService {
         }
     }
 
-    getAllwithArticles() {
-        const volumeJoint = this.volumes
-        for (var index in volumeJoint) {
-            volumeJoint[index]["sections"] = [];
-        }
-        const sections = this.sectionService.getAllwithArticles();
-        for (var index in sections) {
-            volumeJoint[sections[index].id_volume]["sections"].push(sections[index])
-        }
-        return volumeJoint
-    }
+    // getAllwithArticles() {
+    //     const volumeJoint = this.volumes
+    //     for (var index in volumeJoint) {
+    //         volumeJoint[index]["sections"] = [];
+    //     }
+    //     const sections = this.sectionService.getAllwithArticles();
+    //     for (var index in sections) {
+    //         volumeJoint[sections[index].id_volume]["sections"].push(sections[index])
+    //     }
+    //     return volumeJoint
+    // }
 }
 
 

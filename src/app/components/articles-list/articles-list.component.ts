@@ -20,7 +20,7 @@ export class ArticlesListComponent implements OnInit {
 
   ngOnInit() {
     this.retrieveArticles();
-    this.getVolumeWithArticle();
+    // this.getVolumeWithArticle();
   }
 
   retrieveArticles() {
@@ -37,7 +37,7 @@ export class ArticlesListComponent implements OnInit {
 
   refreshList() {
     this.retrieveArticles();
-    this.getVolumeWithArticle();
+    // this.getVolumeWithArticle();
   }
 
   searchLabel() {
@@ -76,8 +76,8 @@ export class ArticlesListComponent implements OnInit {
   //   return this.articleService.getVolume(article)
   // }
 
-  getVolumeWithArticle() {
-    this.volumes = this.volumeService.getAllwithArticles()
-  }
+  // getVolumeWithArticle() {
+  //   this.volumes = this.volumeService.getAllwithArticles()
+  // }
 
 }

@@ -55,17 +55,17 @@ export class SectionService {
 
 
 
-    getAllwithArticles() {
-        const sectionJoint = this.sections;
-        for (var index in sectionJoint) {
-            sectionJoint[index]["items"] = [];
-        }
-        const items = this.itemService.getAllwithArticles();
-        for (var index in items) {
-            sectionJoint[items[index].id_section]["items"].push(items[index])
-        }
-        return sectionJoint
-    }
+    // getAllwithArticles() {
+    //     const sectionJoint = this.sections;
+    //     for (var index in sectionJoint) {
+    //         sectionJoint[index]["items"] = [];
+    //     }
+    //     const items = this.itemService.getAllwithArticles();
+    //     for (var index in items) {
+    //         sectionJoint[items[index].id_section]["items"].push(items[index])
+    //     }
+    //     return sectionJoint
+    // }
 }
 
 

@@ -15,8 +15,7 @@ export class ArticleEditComponent implements OnInit {
   message = '';
   statuses: any;
   submit_group: any;
-
-  items = this.itemService.getAll();
+  items : any;
 
   constructor(
     private articleService: ArticleService,
@@ -35,7 +34,7 @@ export class ArticleEditComponent implements OnInit {
 
   retrieveChoices() {
     this.retrieveStatuses();
-    // this.retrieveItems();
+    this.retrieveItems();
     this.retrieveSubmitGroups();
   }
 
@@ -51,17 +50,17 @@ export class ArticleEditComponent implements OnInit {
         });
   }
 
-  // retrieveItems() {
-  //   this.itemService.getAll()
-  //     .subscribe(
-  //       data => {
-  //         this.items = data;
-  //         console.log(data);
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       });
-  // }
+  retrieveItems() {
+    this.itemService.getAll()
+      .subscribe(
+        data => {
+          this.items = data;
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        });
+  }
 
   retrieveSubmitGroups() {
     this.submitGroupService.getAll()

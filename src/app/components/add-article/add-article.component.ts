@@ -26,9 +26,9 @@ export class AddArticleComponent implements OnInit {
     status: 1
   };
 
-  statuses : any;
-  submit_group : any;
-  items = this.itemService.getAll();
+  statuses: any;
+  submit_group: any;
+  items : any;
 
   constructor(private articleService: ArticleService,
     private router: Router,
@@ -42,34 +42,34 @@ export class AddArticleComponent implements OnInit {
   }
 
   retrieveChoices() {
-     this.retrieveStatuses();
-    // this.retrieveItems();
+    this.retrieveStatuses();
+    this.retrieveItems();
     this.retrieveSubmitGroups();
   }
 
   retrieveStatuses() {
     this.statusService.getAll()
-    .subscribe(
-      data => {
-        this.statuses = data;
-        console.log(data);
-      },
-      error => {
-        console.log(error);
-      });
+      .subscribe(
+        data => {
+          this.statuses = data;
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        });
   }
 
-  // retrieveItems() {
-  //   this.itemService.getAll()
-  //     .subscribe(
-  //       data => {
-  //         this.items = data;
-  //         console.log(data);
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       });
-  // }
+  retrieveItems() {
+    this.itemService.getAll()
+      .subscribe(
+        data => {
+          this.items = data;
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        });
+  }
 
   retrieveSubmitGroups() {
     this.submitGroupService.getAll()
@@ -94,7 +94,7 @@ export class AddArticleComponent implements OnInit {
       percent_workforce: this.article.percent_workforce,
       subcontractable: this.article.subcontractable,
       up_to_date: this.article.up_to_date,
-      id_submit: this.article.id_submit == "null" ? null : this.article.id_submit  ,
+      id_submit: this.article.id_submit == "null" ? null : this.article.id_submit,
       id_item: this.article.id_item,
       status: this.article.status
     };
