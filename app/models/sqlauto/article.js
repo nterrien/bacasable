@@ -1,5 +1,3 @@
-/* jshint indent: 2 */
-
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('article', {
     id: {
@@ -75,9 +73,6 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     timestamps: false,
-    underscored: true,
-    freezeTableName: true,
-
     tableName: 'article'
   });
 };

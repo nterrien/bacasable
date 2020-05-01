@@ -26,9 +26,6 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     timestamps: false,
-    underscored: true,
-    freezeTableName: true,
-
     tableName: 'is_option'
   });
 };

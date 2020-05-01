@@ -9,6 +9,10 @@ module.exports = app => {
     // Retrieve all Articles
     router.get("/articles", articles.findAll);
 
+
+    // Retrieve all Articles
+    router.get("/articles/all", articles.findAllWithForeignTable);
+
     // Retrieve a single Article with id
     router.get("/articles/:id", articles.findOne);
 
