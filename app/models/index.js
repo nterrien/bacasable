@@ -19,14 +19,19 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.article = require("./article.model.js")(sequelize, Sequelize);
-db.status = require("./status.model.js")(sequelize, Sequelize);
+// Fetching models
+db.article = require("./sqlauto/article.js")(sequelize, Sequelize);
+db.status = require("./sqlauto/status.js")(sequelize, Sequelize);
+db.item = require("./sqlauto/item.js")(sequelize, Sequelize);
+db.submit_group = require("./sqlauto/submit_group.js")(sequelize, Sequelize);
 
-// db.status.hasMany(db.article, { as: "statuses" });
-db.article.belongsTo(db.status, {
-    foreignKey: "status",
-    as: "articles",
-});
+// article's associations
+db.article.belongsTo(db.item, { foreignKey: "id_item" })
+db.item.hasMany(db.article, { foreignKey: "id_item" })
+
+db.article.belongsTo(db.submit_group, { foreignKey: "id_submit" })
+
+db.article.belongsTo(db.status, { foreignKey: "status",as: "statuses" })
 
 
 module.exports = db;

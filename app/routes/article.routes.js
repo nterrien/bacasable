@@ -11,7 +11,7 @@ module.exports = app => {
 
 
     // Retrieve all Articles
-    router.get("/articles/all", articles.findAllWithForeignTable);
+    router.get("/articles/all", articles.findAllWithAllForeignTable);
 
     // Retrieve a single Article with id
     router.get("/articles/:id", articles.findOne);
