@@ -27,7 +27,7 @@ export class AddArticleComponent implements OnInit {
   };
 
   statuses : any;
-  submit_group = this.submitGroupService.getAll();
+  submit_group : any;
   items = this.itemService.getAll();
 
   constructor(private articleService: ArticleService,
@@ -44,7 +44,7 @@ export class AddArticleComponent implements OnInit {
   retrieveChoices() {
      this.retrieveStatuses();
     // this.retrieveItems();
-    // this.retrieveSubmitGroups();
+    this.retrieveSubmitGroups();
   }
 
   retrieveStatuses() {
@@ -71,17 +71,17 @@ export class AddArticleComponent implements OnInit {
   //       });
   // }
 
-  // retrieveSubmitGroups() {
-  //   this.submitGroupService.getAll()
-  //     .subscribe(
-  //       data => {
-  //         this.submit_group = data;
-  //         console.log(data);
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       });
-  // }
+  retrieveSubmitGroups() {
+    this.submitGroupService.getAll()
+      .subscribe(
+        data => {
+          this.submit_group = data;
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        });
+  }
 
   saveArticle() {
     const data = {
