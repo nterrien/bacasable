@@ -30,8 +30,10 @@ db.article.belongsTo(db.item, { foreignKey: "id_item" })
 db.item.hasMany(db.article, { foreignKey: "id_item" })
 
 db.article.belongsTo(db.submit_group, { foreignKey: "id_submit" })
+// db.submit_group.hasMany(db.article, { foreignKey: "id_submit" })
 
 db.article.belongsTo(db.status, { foreignKey: "status",as: "statuses" })
+// db.status.hasMany(db.article, { foreignKey: "status", as: "statuses" }); // Pasa sur pour lui car il y a un renommage
 
 
 module.exports = db;

@@ -80,7 +80,6 @@ export class ItemService {
 
         for (var index in this.articles) {
             itemJoint[this.articles[index].id_item]["articles"].push(this.articles[index])
-            console.log("ho hzho")
         }
         return itemJoint
     }

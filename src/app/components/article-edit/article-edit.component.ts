@@ -13,8 +13,8 @@ import { ItemService } from 'src/app/services/item.service';
 export class ArticleEditComponent implements OnInit {
   article = null;
   message = '';
+  statuses: any;
 
-  services = this.statusService.getAll();
   submit_group = this.submitGroupService.getAll();
   items = this.itemService.getAll();
 
@@ -29,7 +29,51 @@ export class ArticleEditComponent implements OnInit {
   ngOnInit() {
     this.message = '';
     this.getArticle(this.route.snapshot.paramMap.get('id'));
+    this.retrieveChoices();
   }
+
+
+  retrieveChoices() {
+    this.retrieveStatuses();
+    // this.retrieveItems();
+    // this.retrieveSubmitGroups();
+  }
+
+  retrieveStatuses() {
+    this.statusService.getAll()
+      .subscribe(
+        data => {
+          this.statuses = data;
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+  // retrieveItems() {
+  //   this.itemService.getAll()
+  //     .subscribe(
+  //       data => {
+  //         this.items = data;
+  //         console.log(data);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       });
+  // }
+
+  // retrieveSubmitGroups() {
+  //   this.submitGroupService.getAll()
+  //     .subscribe(
+  //       data => {
+  //         this.submit_group = data;
+  //         console.log(data);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       });
+  // }
 
   getArticle(id) {
     this.articleService.get(id)
@@ -44,6 +88,8 @@ export class ArticleEditComponent implements OnInit {
   }
 
   updateArticle() {
+
+    this.article.id_submit == "null" ? this.article.id_submit = null : this.article.id_submit = this.article.id_submit
     this.articleService.update(this.article.id, this.article)
       .subscribe(
         response => {

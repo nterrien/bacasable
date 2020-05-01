@@ -24,7 +24,7 @@ export class ArticlesListComponent implements OnInit {
   }
 
   retrieveArticles() {
-    this.articleService.getAll()
+    this.articleService.getAllwithAllJoinTable()
       .subscribe(
         data => {
           this.articles = data;
@@ -41,7 +41,7 @@ export class ArticlesListComponent implements OnInit {
   }
 
   searchLabel() {
-    this.articleService.findByLabel(this.label)
+    this.articleService.findByLabel(this.label) // Ça affiche pas bien les status, c'est car il va falloir que je fusionne la recherche complete (entendre avec les jointures) et la recherche par label
       .subscribe(
         data => {
           this.articles = data;
@@ -64,14 +64,6 @@ export class ArticlesListComponent implements OnInit {
         });
   }
 
-  getStatus(article: any) {
-    return this.articleService.getStatus(article)
-  }
-
-  getSubmitGroup(article: any) {
-    return this.articleService.getSubmitGroup(article)
-  }
-
   // getItem(article: any) {
   //   return this.articleService.getItem(article)
   // }
@@ -84,7 +76,7 @@ export class ArticlesListComponent implements OnInit {
   //   return this.articleService.getVolume(article)
   // }
 
-  getVolumeWithArticle(){
+  getVolumeWithArticle() {
     this.volumes = this.volumeService.getAllwithArticles()
   }
 

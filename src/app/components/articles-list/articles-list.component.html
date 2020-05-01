@@ -1,7 +1,7 @@
 <div class="list row">
     <div class="col-md-8">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Search by label" [(ngModel)]="label" />
+            <input type="text" class="form-control" placeholder="Recherche des articles selon leur titre" [(ngModel)]="label" />
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" (click)="searchLabel()">Chercher</button>
                 <a routerLink="/articles/add" class="nav-link">Ajouter</a>
@@ -13,10 +13,10 @@
         <table class="table table-bordered table-responsive">
             <thead>
                 <tr>
-                    <th class="col-md-1" scope="col">Label</th>
+                    <th class="col-md-1" scope="col">Titre</th>
                     <th class="col-md-1" scope="col">Description</th>
-                    <th class="col-md-1" scope="col">Groupe de Soumission</th>
                     <th class="col-md-1" scope="col">Commentaire</th>
+                    <th class="col-md-1" scope="col">Groupe de Soumission</th>
                     <th class="col-md-1" scope="col">Unité</th>
                     <th class="col-md-1" scope="col">Quantité minimale</th>
                     <th class="col-md-1" scope="col">Prix</th>
@@ -64,8 +64,8 @@
                                     {{ article.description }}
                                 </td>
                                 <td>
-                                   {{ getSubmitGroup(article).label }}
-                                    </td>
+                                {{ article.submit_group != null ? article.submit_group.label : "Aucun" }}
+                                </td>
                                 <td>
                                     {{ article.comment }}
                                 </td>
@@ -88,7 +88,7 @@
                                     {{article.up_to_date ? ("Oui") : ("Non")}}
                                 </td>
 
-                                <td> {{getStatus(article).label}} </td>
+                                <td> {{ article.statuses.label }} </td>
 
                                 <td>
                                     <a class="badge badge-warning" href="/articles/{{ article.id }}">
@@ -97,12 +97,11 @@
                                     <button class="badge badge-danger mr-2" (click)="deleteArticle(article.id)">
                                         Supprimer
                                     </button>
-                                    </td>
+                                </td>
                             </tr>
                         </div>
                     </div>
                 </div> -->
-
 
 
 
@@ -117,17 +116,10 @@
                         {{ article.description }}
                     </td>
                     <td>
-                        <!-- {{ getSubmitGroup(article) != "" ? getSubmitGroup(article).label : "Aucun" }} -->
-                        <!-- Y'a une erreur ici, quand ça compile mais en vrai quand on test
-                                                            ça fait ce que je veux. En meme tmeps il est bizarre parce que justement le cas ou 
-                                                            c'est "" j'affiche Aucun et pas le label donc il devrait pas m'emebter
-                                                            Cela dit je devrait petu etre voir apres que le backend est fini car c'est juste
-                                                        on peux changer ce que retourne qunad y'a rein -->
-                        {{ getSubmitGroup(article).label }}
-                        <!-- Ça marche pareil mais je suis pas convaincu que ce soit la meillleur de façon de gerer les problemes -->
+                        {{ article.comment }}
                     </td>
                     <td>
-                        {{ article.comment }}
+                        {{ article.submit_group != null ? article.submit_group.label : "Aucun" }}
                     </td>
                     <td>
                         {{ article.unit }}
@@ -148,7 +140,7 @@
                         {{article.up_to_date ? ("Oui") : ("Non")}}
                     </td>
 
-                    <td> {{getStatus(article).label}} </td>
+                    <td> {{ article.statuses.label }} </td>
 
                     <td>
                         <a class="badge badge-warning" href="/articles/{{ article.id }}">

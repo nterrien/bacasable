@@ -22,6 +22,7 @@
         <div class="form-group">
             <label for="id_submit"> Groupe de Soumission </label>
             <select id="id_submit" class="form-control" required [(ngModel)]="article.id_submit" name="id_submit">
+                <option value="null"> Aucun </option>
                 <option *ngFor="let submit of submit_group" value="{{submit.id}}"> {{ submit.label }}</option>
             </select>
         </div>
@@ -56,7 +57,7 @@
         <div class="form-group">
             <label for="status"> Status </label>
             <select id="status" class="form-control" required [(ngModel)]="article.status" name="status">
-                <option *ngFor="let service of services" value="{{service.id}}"> {{ service.label }}</option>
+                <option *ngFor="let status of statuses" value="{{status.id}}"> {{ status.label }}</option>
             </select>
         </div>
 
@@ -64,15 +65,15 @@
             <label for="subcontractable"> Sous traitable </label>
             <select id="subcontractable" class="form-control" required [(ngModel)]="article.subcontractable"
                 name="subcontractable">
-                <option value="true"> Oui </option>
-                <option value="false"> Non </option>
+                <option value="1"> Oui </option>
+                <option value="0"> Non </option>
             </select>
         </div>
         <div class="form-group">
             <label for="up_to_date"> À jour </label>
             <select id="up_to_date" class="form-control" required [(ngModel)]="article.up_to_date" name="up_to_date">
-                <option value="true"> Oui </option>
-                <option value="false"> Non </option>
+                <option value="1"> Oui </option>
+                <option value="0"> Non </option>
             </select>
         </div>
 

@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+const baseUrl = 'http://localhost:8080/api/status';
+
 @Injectable({
     providedIn: 'root'
 })
 export class StatusService {
 
-    //statuses : any[]
+    statuses : any[]
 
-    statuses = [{ id: 1, label: 'À valider', comment: '' },
-    { id: 2, label: 'Validé', comment: '' },
-    { id: 3, label: 'Archivé', comment: '' },
-    { id: 4, label: 'Autre', comment: '' }]
-
-    constructor() { }
+    constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.statuses;
+        return this.http.get(baseUrl);
     }
 
     get(id: number) {
-        return this.statuses.find(myObj => myObj.id == id);
+        return this.http.get(`${baseUrl}/${id}`);
     }
 }
 

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { StatusService } from './status.service';
-import { SubmitGroupService } from './submit-group.service';
 
 const baseUrl = 'http://localhost:8080/api/articles';
 
@@ -9,7 +7,7 @@ const baseUrl = 'http://localhost:8080/api/articles';
   providedIn: 'root'
 })
 export class ArticleService {
-  
+
   // constructor(
   //   private http: HttpClient,
   //   private statusService: StatusService,
@@ -17,12 +15,16 @@ export class ArticleService {
   //   private itemService: ItemService) { }
 
   constructor(
-    private http: HttpClient,
-    private statusService: StatusService,
-    private submitGroupService: SubmitGroupService) { }
+    private http: HttpClient) { }
 
+
+  // Peut etre qu'on peux factoriser le code pour les deux fonctions getAll() (ce qui se fera dans le controller)
   getAll() {
     return this.http.get(baseUrl);
+  }
+
+  getAllwithAllJoinTable() {
+    return this.http.get(`${baseUrl}/all`);
   }
 
   get(id: number) {
@@ -47,16 +49,9 @@ export class ArticleService {
   }
 
   findByLabel(label: string) {
-    return this.http.get(`${baseUrl}?label=${label}`);
+    return this.http.get(`${baseUrl}/all/?label=${label}`);
   }
 
-  getStatus(article) {
-    return this.statusService.get(article.status);
-  }
-
-  getSubmitGroup(article) {
-    return this.submitGroupService.get(article.id_submit);
-  }
   // getItem(article) {
   //   return this.itemService.get(article.id_item);
   // }

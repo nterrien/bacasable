@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./app/routes/article.routes")(app);
+require("./app/routes/status.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

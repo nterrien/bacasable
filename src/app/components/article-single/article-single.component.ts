@@ -17,14 +17,6 @@ export class ArticleSingleComponent implements OnInit {
 
   deleteArticle() {
     this.articleList.deleteArticle(this.article.id)
-  } 
-
-  getStatus(article: any) {
-    return this.articleList.getStatus(article)
-  }
-
-  getSubmitGroup(article: any) {
-    return this.articleList.getSubmitGroup(article)
   }
 
 }

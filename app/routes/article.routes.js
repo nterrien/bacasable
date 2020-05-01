@@ -1,6 +1,6 @@
 module.exports = app => {
     const articles = require("../controllers/article.controller.js");
-
+    
     var router = require("express").Router();
 
     // Create a new Article
@@ -9,8 +9,7 @@ module.exports = app => {
     // Retrieve all Articles
     router.get("/articles", articles.findAll);
 
-
-    // Retrieve all Articles
+    // Retrieve all Articles with a join
     router.get("/articles/all", articles.findAllWithAllForeignTable);
 
     // Retrieve a single Article with id

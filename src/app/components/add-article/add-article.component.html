@@ -15,12 +15,12 @@
     <div class="form-group">
         <label for="description">Description</label>
         <input class="form-control" id="description" required [(ngModel)]="article.description" name="description" />
-        <!-- Pas recquired hein -->
     </div>
 
     <div class="form-group">
         <label for="id_submit"> Groupe de Soumission </label>
         <select id="id_submit" class="form-control" required [(ngModel)]="article.id_submit" name="id_submit">
+            <option value="null"> Aucun </option>
             <option *ngFor="let submit of submit_group" value="{{submit.id}}"> {{ submit.label }}</option>
         </select>
     </div>
@@ -28,7 +28,7 @@
     <div class="form-group">
         <label for="comment">Commentaire</label>
         <input class="form-control" id="comment" required [(ngModel)]="article.comment" name="comment" />
-    </div><!-- Pas recquired hein -->
+    </div>
 
     <div class="form-group">
         <label for="unit">Unité</label>
@@ -38,24 +38,24 @@
     <div class="form-group">
         <label for="minimal_quantity">Quantité minimale</label>
         <input class="form-control" id="minimal_quantity" required [(ngModel)]="article.minimal_quantity"
-            name="minimal_quantity" /><!-- Pas recquired hein -->
+            name="minimal_quantity" /><!-- Pas recquired NORMALEMENT -->
     </div>
 
     <div class="form-group">
         <label for="price">Prix</label>
         <input class="form-control" id="price" required [(ngModel)]="article.price" name="price" />
-    </div><!-- Pas recquired hein -->
+    </div><!-- Pas recquired NORMALEMENT -->
 
     <div class="form-group">
         <label for="percent_workforce">Pourcentage de main d'oeuvre</label>
         <input class="form-control" id="percent_workforce" required [(ngModel)]="article.percent_workforce"
-            name="percent_workforce" /><!-- Pas recquired hein -->
+            name="percent_workforce" /><!-- Pas recquired NORMALEMENT -->
     </div>
 
     <div class="form-group">
         <label for="status"> Status </label>
         <select id="status" class="form-control" required [(ngModel)]="article.status" name="status">
-            <option *ngFor="let service of services" value="{{service.id}}"> {{ service.label }}</option>
+            <option *ngFor="let status of statuses" value="{{status.id}}"> {{ status.label }}</option>
         </select>
     </div>
     <div class="form-group">
