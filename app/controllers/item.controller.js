@@ -36,7 +36,9 @@ exports.create = (req, res) => {
 
 // Retrieve all Item from the database.
 exports.findAll = (req, res) => {
-    Item.findAll()
+    Item.findAll({
+        order: [['id', 'ASC']]
+    })
         .then(data => {
             res.send(data);
         })
@@ -51,7 +53,9 @@ exports.findAll = (req, res) => {
 // Retrieve all Item from the database with a join on Article table
 exports.findAllWithArticles = (req, res) => {
     Item.findAll({
-        attributes: ['id', 'label', 'comment', 'id_section'], include: [{ model: Article }]
+        attributes: ['id', 'label', 'comment', 'id_section'],
+        include: [{ model: Article }],
+        order: [['id', 'ASC']]
     })
         .then(data => {
             res.send(data);

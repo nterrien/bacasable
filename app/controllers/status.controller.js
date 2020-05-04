@@ -35,7 +35,10 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const label = req.query.label;
     var condition = label ? { label: { [Op.like]: `%${label}%` } } : null;
-    Status.findAll({ where: condition })
+    Status.findAll({
+        where: condition,
+        order: [['id', 'ASC']]
+    })
         .then(data => {
             res.send(data);
         })

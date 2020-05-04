@@ -34,7 +34,9 @@ exports.create = (req, res) => {
 
 // Retrieve all Volume from the database.
 exports.findAll = (req, res) => {
-    Volume.findAll()
+    Volume.findAll({
+        order: [['id', 'ASC']]
+    })
         .then(data => {
             res.send(data);
         })
@@ -49,7 +51,9 @@ exports.findAll = (req, res) => {
 // Retrieve all Volume from the database with a join on Item table
 exports.findAllWithSections = (req, res) => {
     Volume.findAll({
-        attributes: ['id', 'label', 'comment'], include: [{ model: Section }]
+        attributes: ['id', 'label', 'comment'],
+        include: [{ model: Section }],
+        order: [['id', 'ASC']]
     })
         .then(data => {
             res.send(data);

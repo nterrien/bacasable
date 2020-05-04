@@ -56,8 +56,9 @@ exports.findAll = (req, res) => {
         ]
     } : null;
 
-    /// TODO Je crois que la recherche ce fait sur label et descrpition en meme tmeps
-    Article.findAll({ where: condition })
+    Article.findAll({
+        where: condition,
+        order: [['id_item', 'ASC']]}) // Decider de l'ordre de trie apres
         .then(data => {
             res.send(data);
         })
@@ -81,7 +82,8 @@ exports.findAllWithAllForeignTable = (req, res) => {
     // Ne prends plus les id vu que je retoune direct la listes des elements
     Article.findAll({
         attributes: ['id', 'label', 'description', 'comment', 'unit', 'minimal_quantity', 'price', 'percent_workforce', 'subcontractable', 'up_to_date'],
-        where: condition, include: [{ model: Item }, { model: SubmitGroup }, { model: Status, as: "statuses" }]
+        where: condition, include: [{ model: Item }, { model: SubmitGroup }, { model: Status, as: "statuses" }],
+        order: [['id', 'ASC']]
     })
         .then(data => {
             res.send(data);

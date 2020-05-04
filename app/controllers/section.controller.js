@@ -36,7 +36,9 @@ exports.create = (req, res) => {
 
 // Retrieve all Section from the database.
 exports.findAll = (req, res) => {
-    Section.findAll()
+    Section.findAll({
+        order: [['id', 'ASC']]
+    })
         .then(data => {
             res.send(data);
         })
@@ -51,7 +53,9 @@ exports.findAll = (req, res) => {
 // Retrieve all Section from the database with a join on Item table
 exports.findAllWithItems = (req, res) => {
     Section.findAll({
-        attributes: ['id', 'label', 'comment', 'id_volume'], include: [{ model: Item }]
+        attributes: ['id', 'label', 'comment', 'id_volume'],
+        include: [{ model: Item }],
+        order: [['id', 'ASC']]
     })
         .then(data => {
             res.send(data);
@@ -67,7 +71,9 @@ exports.findAllWithItems = (req, res) => {
 // Retrieve all Section from the database with a join on Volume table
 exports.findAllWithVolumes = (req, res) => {
     Section.findAll({
-        attributes: ['id', 'label', 'comment'], include: [{ model: Volume }]
+        attributes: ['id', 'label', 'comment'],
+        include: [{ model: Volume }],
+        order: [['id', 'ASC']]
     })
         .then(data => {
             res.send(data);

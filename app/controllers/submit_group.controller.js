@@ -33,7 +33,9 @@ exports.create = (req, res) => {
 
 // Retrieve all SubmitGroup from the database.
 exports.findAll = (req, res) => {
-    SubmitGroup.findAll()
+    SubmitGroup.findAll({
+        order: [['id', 'ASC']]
+    })
         .then(data => {
             res.send(data);
         })
