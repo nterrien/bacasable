@@ -1,10 +1,9 @@
 const db = require("../models");
-const Item = db.item;
-const Article = db.article;
 const Section = db.section;
+const Volume = db.volume;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Item
+// Create and Save a new Volume
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.label) {
@@ -14,29 +13,28 @@ exports.create = (req, res) => {
         return;
     }
 
-    // Create a Item
-    const item = {
+    // Create a Volume
+    const volume = {
         label: req.body.label,
         comment: req.body.comment,
-        id_section: req.body.id_section
     };
 
-    // Save Item in the database
-    Item.create(item)
+    // Save Volume in the database
+    Volume.create(volume)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Item."
+                    err.message || "Some error occurred while creating the Volume."
             });
         });
 }
 
-// Retrieve all Item from the database.
+// Retrieve all Volume from the database.
 exports.findAll = (req, res) => {
-    Item.findAll()
+    Volume.findAll()
         .then(data => {
             res.send(data);
         })
@@ -48,26 +46,9 @@ exports.findAll = (req, res) => {
         });
 };
 
-// Retrieve all Item from the database with a join on Article table
-exports.findAllWithArticles = (req, res) => {
-    Item.findAll({
-        attributes: ['id', 'label', 'comment', 'id_section'], include: [{ model: Article }]
-    })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving status."
-            });
-        });
-};
-
-
-// Retrieve all Item from the database with a join on Article table
+// Retrieve all Volume from the database with a join on Item table
 exports.findAllWithSections = (req, res) => {
-    Item.findAll({
+    Volume.findAll({
         attributes: ['id', 'label', 'comment'], include: [{ model: Section }]
     })
         .then(data => {
@@ -81,67 +62,67 @@ exports.findAllWithSections = (req, res) => {
         });
 };
 
-// Find a single Item with an id
+// Find a single Volume with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Item.findByPk(id)
+    Volume.findByPk(id)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving Item with id=" + id
+                message: "Error retrieving Volume with id=" + id
             });
         });
 };
 
-// Update a Item by the id in the request
+// Update a Volume by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Item.update(req.body, {
+    Volume.update(req.body, {
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Item was updated successfully."
+                    message: "Volume was updated successfully."
                 });
             } else {
                 res.send({
-                    message: `Cannot update Item with id=${id}. Maybe Item was not found or req.body is empty!`
+                    message: `Cannot update Volume with id=${id}. Maybe Volume was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating Item with id=" + id
+                message: "Error updating Volume with id=" + id
             });
         });
 };
 
-// Delete a Item with the specified id in the request
+// Delete a Volume with the specified id in the request
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Item.destroy({
+    Volume.destroy({
         where: { id: id }
     })
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "Item was deleted successfully!"
+                    message: "Volume was deleted successfully!"
                 });
             } else {
                 res.send({
-                    message: `Cannot delete Item with id=${id}. Maybe Item was not found!`
+                    message: `Cannot delete Volume with id=${id}. Maybe Volume was not found!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete Item with id=" + id
+                message: "Could not delete Volume with id=" + id
             });
         });
 };
