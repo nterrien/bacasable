@@ -14,7 +14,7 @@ export class ArticlesListComponent implements OnInit {
   // sections: any;
   volumes: any;
 
-  label = ''; //Pour la recherche
+  label = ''; //For the research function
 
   constructor(private articleService: ArticleService, private volumeService: VolumeService) { }
 

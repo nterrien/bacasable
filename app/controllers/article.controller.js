@@ -47,9 +47,15 @@ exports.create = (req, res) => {
 
 // Retrieve all Articles from the database.
 exports.findAll = (req, res) => {
-    const label = req.query.label;
+    const search = req.query.label;
     // OP.or et OP.and vont pouvoir servir ici
-    var condition = label ? { label: { [Op.like]: `%${label}%` } } : null;
+    var condition = search ? {
+        [Op.or]: [
+            { label: { [Op.like]: `%${search}%` } },
+            { description: { [Op.like]: `%${search}%` } }
+        ]
+    } : null;
+
     /// TODO Je crois que la recherche ce fait sur label et descrpition en meme tmeps
     Article.findAll({ where: condition })
         .then(data => {
@@ -65,14 +71,17 @@ exports.findAll = (req, res) => {
 
 // Find all with a join on item, status, and submit group
 exports.findAllWithAllForeignTable = (req, res) => {
-    const label = req.query.label;
-    var condition = label ? { label: { [Op.like]: `%${label}%` } } : null;
-    /// TODO Je crois que la recherche ce fait sur label et descrpition en meme tmeps
-
-    // Ne plus prendre les id vu que je retoune direct la listes des elements
+    const search = req.query.label;
+    var condition = search ? {
+        [Op.or]: [
+            { label: { [Op.like]: `%${search}%` } },
+            { description: { [Op.like]: `%${search}%` } }
+        ]
+    } : null;
+    // Ne prends plus les id vu que je retoune direct la listes des elements
     Article.findAll({
         attributes: ['id', 'label', 'description', 'comment', 'unit', 'minimal_quantity', 'price', 'percent_workforce', 'subcontractable', 'up_to_date'],
-        where: condition, include: [{ model: Item }, { model: SubmitGroup }, { model: Status, as:"statuses"}]
+        where: condition, include: [{ model: Item }, { model: SubmitGroup }, { model: Status, as: "statuses" }]
     })
         .then(data => {
             res.send(data);
