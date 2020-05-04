@@ -1,5 +1,7 @@
 const db = require("../models");
 const Section = db.section;
+const Item = db.item;
+const Article = db.article;
 const Volume = db.volume;
 const Op = db.Sequelize.Op;
 
@@ -66,6 +68,25 @@ exports.findAllWithSections = (req, res) => {
         });
 };
 
+// Retrieve all Volume from the database with a join on Item table
+exports.findAllWithArticles = (req, res) => {
+    Volume.findAll({
+        attributes: ['id', 'label', 'comment'],
+        include: [{
+            model: Section, include: [{ model: Item, include: [Article] }]
+        }],
+        order: [['id', 'ASC']]
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving status."
+            });
+        });
+};
 // Find a single Volume with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;

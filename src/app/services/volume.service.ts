@@ -20,6 +20,10 @@ export class VolumeService {
     get(id: number) {
         return this.http.get(`${baseUrl}/${id}`);
     }
+
+    getAllwithArticles(){
+        return this.http.get(`${baseUrl}/all`);
+    }
 }
 
 
