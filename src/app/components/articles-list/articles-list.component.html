@@ -1,10 +1,10 @@
 <div class="list row">
     <div class="col-md-8">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" (change)="searchLabel()" type="text"
-                placeholder="Recherche des articles selon leur titre ou leur description" [(ngModel)]="label"  />
+            <!-- <input type="text" class="form-control" (change)="searchLabel()" type="text"
+                placeholder="Recherche des articles selon leur titre ou leur description" [(ngModel)]="label" /> -->
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" (click)="searchLabel()">Chercher</button>
+                <!-- <button class="btn btn-outline-secondary" type="button" (click)="searchLabel()">Chercher</button> -->
                 <a routerLink="/articles/add" class="btn btn-outline-secondary">Ajouter</a>
             </div>
         </div>
@@ -29,33 +29,65 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- <div class="bg-dark" *ngFor="let volume of volumes;">
-                    <tr class="text-white">
+                <ng-container *ngFor="let volume of volumes;">
+                    <tr class=" bg-dark text-white">
                         <td>
                             {{ volume.label }}
                         </td>
                         <td>
                             {{ volume.comment }}
                         </td>
+                        <!-- This is to color the background of the row -->
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
-                    <div class="bg-secondary" *ngFor="let section of volume.sections;">
-                        <tr class="text-white">
+                    <ng-container *ngFor="let section of volume.sections;">
+                        <tr class="bg-secondary text-white">
                             <td>
                                 {{ section.label }}
                             </td>
                             <td>
                                 {{ section.comment }}
                             </td>
+                            <!-- This is to color the background of the row -->
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
-                        <div class="bg-danger text-black" *ngFor="let item of section.items;">
-                            <tr>
+                        <ng-container *ngFor="let item of section.items;">
+                            <tr class="bg-light text-black">
                                 <td>
                                     {{ item.label }}
                                 </td>
                                 <td>
                                     {{ item.comment }}
                                 </td>
-                                <td>{{item.articles}}</td>
+                                <!-- This is to color the background of the row -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr class="bg-white text-black" *ngFor=" let article of item.articles">
                                 <td>
@@ -65,7 +97,7 @@
                                     {{ article.description }}
                                 </td>
                                 <td>
-                                {{ article.submit_group != null ? article.submit_group.label : "Aucun" }}
+                                    {{ article.submit_group != null ? article.submit_group.label : "Aucun" }}
                                 </td>
                                 <td>
                                     {{ article.comment }}
@@ -100,63 +132,9 @@
                                     </button>
                                 </td>
                             </tr>
-                        </div>
-                    </div>
-                </div> -->
-
-
-
-
-
-                <tr class="bg-white text-black" *ngFor=" let article of articles">
-                    <!-- <app-article-single [article]="article" *ngFor="let article of articles" ></app-article-single> -->
-                    <td>
-                        {{ article.label }}
-                    </td>
-                    <td>
-                        {{ article.description }}
-                    </td>
-                    <td>
-                        {{ article.comment }}
-                    </td>
-                    <td>
-                        {{ article.submit_group != null ? article.submit_group.label : "Aucun" }}
-                    </td>
-                    <td>
-                        {{ article.unit }}
-                    </td>
-                    <td>
-                        {{ article.minimal_quantity }}
-                    </td>
-                    <td>
-                        {{ article.price }}
-                    </td>
-                    <td>
-                        {{ article.percent_workforce }}
-                    </td>
-                    <td>
-                        {{article.subcontractable ? ("Oui") : ("Non")}}
-                    </td>
-                    <td>
-                        {{article.up_to_date ? ("Oui") : ("Non")}}
-                    </td>
-
-                    <td> {{ article.statuses.label }} </td>
-
-                    <td>
-                        <a class="badge badge-warning" href="/articles/{{ article.id }}">
-                            Editer
-                        </a>
-                        <button class="badge badge-danger mr-2" (click)="deleteArticle(article.id)">
-                            Supprimer
-                        </button>
-                        <!-- Pour tester qu'on vois bien Item Section et VOlme -->
-                        <!-- {{ getItem(article).label}}{{ getSection(article).label}}
-                                                        {{ getVolume(article).label}} -->
-                    </td>
-                </tr>
-
-
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
             </tbody>
         </table>
     </div>

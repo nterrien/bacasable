@@ -4,6 +4,8 @@ const Item = db.item;
 const Article = db.article;
 const Volume = db.volume;
 const Op = db.Sequelize.Op;
+const Status = db.status;
+const SubmitGroup = db.submit_group;
 
 // Create and Save a new Volume
 exports.create = (req, res) => {
@@ -70,10 +72,25 @@ exports.findAllWithSections = (req, res) => {
 
 // Retrieve all Volume from the database with a join on Item table
 exports.findAllWithArticles = (req, res) => {
+    const search = req.query.label;
+    var condition = search ? {
+        [Op.or]: [
+            { label: { [Op.like]: `%${search}%` } },
+            { description: { [Op.like]: `%${search}%` } }
+        ]
+    } : null;
+
     Volume.findAll({
         attributes: ['id', 'label', 'comment'],
         include: [{
-            model: Section, include: [{ model: Item, include: [Article] }]
+            model: Section, include:
+                [{
+                    model: Item, include:
+                        [{
+                            model: Article, include:
+                                [{ model: Status, as: "statuses" }, SubmitGroup], order: [['id', 'ASC']]
+                        }]
+                }]
         }],
         order: [['id', 'ASC']]
     })

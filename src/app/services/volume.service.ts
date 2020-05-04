@@ -22,7 +22,11 @@ export class VolumeService {
     }
 
     getAllwithArticles(){
-        return this.http.get(`${baseUrl}/all`);
+        return this.http.get(`${baseUrl}/articles`);
+    }
+
+    findByLabel(label: string) {
+        return this.http.get(`${baseUrl}/articles/?label=${label}`);
     }
 }
 

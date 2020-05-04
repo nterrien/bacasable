@@ -9,9 +9,7 @@ import { VolumeService } from 'src/app/services/volume.service';
 })
 export class ArticlesListComponent implements OnInit {
 
-  articles: any;
-  // items: any;
-  // sections: any;
+  // articles: any;
   volumes: any;
 
   label = ''; //For the research function
@@ -19,44 +17,47 @@ export class ArticlesListComponent implements OnInit {
   constructor(private articleService: ArticleService, private volumeService: VolumeService) { }
 
   ngOnInit() {
-    this.retrieveArticles();
-    // this.getVolumeWithArticle();
+    // this.retrieveArticles();
+    this.getVolumeWithArticle();
   }
 
-  retrieveArticles() {
-    this.articleService.getAllwithAllJoinTable()
-      .subscribe(
-        data => {
-          this.articles = data;
-          console.log(data);
-        },
-        error => {
-          console.log(error);
-        });
-  }
+  // retrieveArticles() {
+  //   this.articleService.getAllwithAllJoinTable()
+  //     .subscribe(
+  //       data => {
+  //         this.articles = data;
+  //         // Used in dev, should be removed
+  //         //  console.log(data);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       });
+  // }
 
   refreshList() {
-    this.retrieveArticles();
-    // this.getVolumeWithArticle();
+    // this.retrieveArticles();
+    this.getVolumeWithArticle();
   }
 
-  searchLabel() {
-    this.articleService.findByLabel(this.label) // Ça affiche pas bien les status, c'est car il va falloir que je fusionne la recherche complete (entendre avec les jointures) et la recherche par label
-      .subscribe(
-        data => {
-          this.articles = data;
-          console.log(data);
-        },
-        error => {
-          console.log(error);
-        });
-  }
+  // searchLabel() {
+  //   this.articleService.findByLabel(this.label) // Ça affiche pas bien les status, c'est car il va falloir que je fusionne la recherche complete (entendre avec les jointures) et la recherche par label
+  //     .subscribe(
+  //       data => {
+  //         this.articles = data;
+  //         // Used in dev, should be removed
+  //         // console.log(data);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       });
+  // }
 
   deleteArticle(id: number) {
     this.articleService.delete(id)
       .subscribe(
         response => {
-          console.log(response);
+          // Used in dev, should be removed
+          //  console.log(response);
           this.refreshList()
         },
         error => {
@@ -64,20 +65,46 @@ export class ArticlesListComponent implements OnInit {
         });
   }
 
-  // getItem(article: any) {
-  //   return this.articleService.getItem(article)
-  // }
+  getVolumeWithArticle() {
+    this.volumeService.getAllwithArticles()
+      .subscribe(
+        data => {
+          this.volumes = data;
+          // Used in dev, should be removed
+          // console.log(data);
+          // this.deleteUnusedItem();
+          // console.log(this.volumes);
+        },
+        error => {
+          console.log(error);
+        });
+  }
 
-  // getSection(article: any) {
-  //   return this.articleService.getSection(article)
-  // }
-
-  // getVolume(article: any) {
-  //   return this.articleService.getVolume(article)
-  // }
-
-  // getVolumeWithArticle() {
-  //   this.volumes = this.volumeService.getAllwithArticles()
-  // }
+  // Does not work
+  deleteUnusedItem() {
+    // It is not necessary to keep item with no articles/ section with no item / volume with no section
+    // This function might not be in the right place
+    for (const volume in this.volumes) {
+      console.log(this.volumes[volume])
+      if (this.volumes[volume].sections.length == 0) {
+        for (const section in this.volumes[volume].sections) {
+          if (this.volumes[volume].sections[section].items.length == 0) {
+            for (const item in this.volumes[volume].sections[section].items) {
+              if (this.volumes[volume].sections[section].items[item].articles.length == 0) {
+                delete this.volumes[volume].sections[section].items[item]
+                console.log(this.volumes[volume].sections[section])
+              }
+            }
+          }
+          else {
+            delete this.volumes[volume].sections[section]
+          }
+        }
+      }
+      else {
+        delete this.volumes[volume]
+      }
+    }
+  }
 
 }
