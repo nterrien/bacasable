@@ -85,14 +85,18 @@ exports.findAllWithArticles = (req, res) => {
         order: [['id', 'ASC']],
         include: [{
             model: Section,
+            attributes: ['id', 'label', 'comment'],
             required: true,
+            order: [['id', 'ASC']],
             include:
                 [{
                     model: Item,
+                    attributes: ['id', 'label', 'comment'],
                     required: true,
                     include:
                         [{
                             model: Article,
+                            attributes: ['id', 'label', 'description', 'comment', 'unit', 'minimal_quantity', 'price', 'percent_workforce', 'subcontractable', 'up_to_date'],
                             required: true,
                             include: [{ model: Status, as: "statuses" }, SubmitGroup],
                             where: condition
