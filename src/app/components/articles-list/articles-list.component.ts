@@ -71,40 +71,10 @@ export class ArticlesListComponent implements OnInit {
         data => {
           this.volumes = data;
           // Used in dev, should be removed
-          // console.log(data);
-          // this.deleteUnusedItem();
-          // console.log(this.volumes);
+          console.log(data);
         },
         error => {
           console.log(error);
         });
   }
-
-  // Does not work
-  deleteUnusedItem() {
-    // It is not necessary to keep item with no articles/ section with no item / volume with no section
-    // This function might not be in the right place
-    for (const volume in this.volumes) {
-      console.log(this.volumes[volume])
-      if (this.volumes[volume].sections.length == 0) {
-        for (const section in this.volumes[volume].sections) {
-          if (this.volumes[volume].sections[section].items.length == 0) {
-            for (const item in this.volumes[volume].sections[section].items) {
-              if (this.volumes[volume].sections[section].items[item].articles.length == 0) {
-                delete this.volumes[volume].sections[section].items[item]
-                console.log(this.volumes[volume].sections[section])
-              }
-            }
-          }
-          else {
-            delete this.volumes[volume].sections[section]
-          }
-        }
-      }
-      else {
-        delete this.volumes[volume]
-      }
-    }
-  }
-
 }

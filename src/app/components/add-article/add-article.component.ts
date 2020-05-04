@@ -52,7 +52,8 @@ export class AddArticleComponent implements OnInit {
       .subscribe(
         data => {
           this.statuses = data;
-          console.log(data);
+          // Used in dev, should be removed
+          //console.log(data);
         },
         error => {
           console.log(error);
@@ -64,7 +65,8 @@ export class AddArticleComponent implements OnInit {
       .subscribe(
         data => {
           this.items = data;
-          console.log(data);
+          // Used in dev, should be removed
+          //console.log(data);
         },
         error => {
           console.log(error);
@@ -76,7 +78,8 @@ export class AddArticleComponent implements OnInit {
       .subscribe(
         data => {
           this.submit_group = data;
-          console.log(data);
+          // Used in dev, should be removed
+          //console.log(data);
         },
         error => {
           console.log(error);
@@ -101,7 +104,8 @@ export class AddArticleComponent implements OnInit {
     this.articleService.create(data)
       .subscribe(
         response => {
-          console.log(response);
+          // Used in dev, should be removed
+          //console.log(response);
           this.router.navigate(['/articles']);
         },
         error => {

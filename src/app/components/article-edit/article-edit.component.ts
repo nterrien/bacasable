@@ -15,7 +15,7 @@ export class ArticleEditComponent implements OnInit {
   message = '';
   statuses: any;
   submit_group: any;
-  items : any;
+  items: any;
 
   constructor(
     private articleService: ArticleService,
@@ -43,7 +43,8 @@ export class ArticleEditComponent implements OnInit {
       .subscribe(
         data => {
           this.statuses = data;
-          console.log(data);
+          // Used in dev, should be removed
+          //console.log(data);
         },
         error => {
           console.log(error);
@@ -55,7 +56,8 @@ export class ArticleEditComponent implements OnInit {
       .subscribe(
         data => {
           this.items = data;
-          console.log(data);
+          // Used in dev, should be removed
+          //console.log(data);
         },
         error => {
           console.log(error);
@@ -67,7 +69,8 @@ export class ArticleEditComponent implements OnInit {
       .subscribe(
         data => {
           this.submit_group = data;
-          console.log(data);
+          // Used in dev, should be removed
+          // console.log(data);
         },
         error => {
           console.log(error);
@@ -79,7 +82,8 @@ export class ArticleEditComponent implements OnInit {
       .subscribe(
         data => {
           this.article = data;
-          console.log(data);
+          // Used in dev, should be removed
+          // console.log(data);
         },
         error => {
           console.log(error);
@@ -92,7 +96,8 @@ export class ArticleEditComponent implements OnInit {
     this.articleService.update(this.article.id, this.article)
       .subscribe(
         response => {
-          console.log(response);
+          // Used in dev, should be removed
+          //console.log(response);
           this.router.navigate(['/articles']);
         },
         error => {
@@ -104,7 +109,8 @@ export class ArticleEditComponent implements OnInit {
     this.articleService.delete(this.article.id)
       .subscribe(
         response => {
-          console.log(response);
+          // Used in dev, should be removed
+          //console.log(response);
           this.router.navigate(['/articles']);
         },
         error => {

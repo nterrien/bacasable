@@ -49,7 +49,7 @@ export class ArticleService {
   }
 
   findByLabel(label: string) {
-    return this.http.get(`${baseUrl}/all/?label=${label}`);
+    return this.http.get(`${baseUrl}/all/?search=${label}`);
   }
 
   // getItem(article) {

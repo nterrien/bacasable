@@ -82,17 +82,23 @@ exports.findAllWithArticles = (req, res) => {
 
     Volume.findAll({
         attributes: ['id', 'label', 'comment'],
+        order: [['id', 'ASC']],
         include: [{
-            model: Section, include:
+            model: Section,
+            required: true,
+            include:
                 [{
-                    model: Item, include:
+                    model: Item,
+                    required: true,
+                    include:
                         [{
-                            model: Article, include:
-                                [{ model: Status, as: "statuses" }, SubmitGroup], order: [['id', 'ASC']]
+                            model: Article,
+                            required: true,
+                            include: [{ model: Status, as: "statuses" }, SubmitGroup],
+                            where: condition
                         }]
                 }]
-        }],
-        order: [['id', 'ASC']]
+        }]
     })
         .then(data => {
             res.send(data);

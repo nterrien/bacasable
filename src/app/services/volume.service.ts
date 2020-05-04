@@ -26,7 +26,7 @@ export class VolumeService {
     }
 
     findByLabel(label: string) {
-        return this.http.get(`${baseUrl}/articles/?label=${label}`);
+        return this.http.get(`${baseUrl}/articles/?search=${label}`);
     }
 }
 
