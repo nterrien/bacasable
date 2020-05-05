@@ -2,7 +2,6 @@ const db = require("../models");
 const Item = db.item;
 const Article = db.article;
 const Section = db.section;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new Item
 exports.create = (req, res) => {
@@ -69,7 +68,7 @@ exports.findAllWithArticles = (req, res) => {
 };
 
 
-// Retrieve all Item from the database with a join on Article table
+// Retrieve all Item from the database with a join on Section table
 exports.findAllWithSections = (req, res) => {
     Item.findAll({
         attributes: ['id', 'label', 'comment'], include: [{ model: Section }]

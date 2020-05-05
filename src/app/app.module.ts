@@ -8,15 +8,13 @@ import { AppComponent } from './app.component';
 import { AddArticleComponent } from './components/add-article/add-article.component';
 import { ArticleEditComponent } from './components/article-edit/article-edit.component';
 import { ArticlesListComponent } from './components/articles-list/articles-list.component';
-import { ArticleSingleComponent } from './components/article-single/article-single.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddArticleComponent,
     ArticleEditComponent,
-    ArticlesListComponent,
-    ArticleSingleComponent
+    ArticlesListComponent
   ],
   imports: [
     BrowserModule,

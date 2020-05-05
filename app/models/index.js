@@ -29,7 +29,7 @@ db.volume = require("./volume.js")(sequelize, Sequelize);
 
 
 // article's associations
-db.article.belongsTo(db.item, { foreignKey: "id_item" })
+db.article.belongsTo(db.item, { foreignKey: "id_item" }) // Remove if not used
 db.item.hasMany(db.article, { foreignKey: "id_item" })
 
 db.article.belongsTo(db.submit_group, { foreignKey: "id_submit" })
@@ -39,10 +39,10 @@ db.article.belongsTo(db.status, { foreignKey: "status", as: "statuses" })
 // db.status.hasMany(db.article, { foreignKey: "status", as: "statuses" }); // Pasa sur pour lui car il y a un renommage
 
 // Other associations
-db.item.belongsTo(db.section, { foreignKey: "id_section" })
+db.item.belongsTo(db.section, { foreignKey: "id_section" }) // Remove if not used
 db.section.hasMany(db.item, { foreignKey: "id_section" })
 
-db.section.belongsTo(db.volume, { foreignKey: "id_volume" })
+db.section.belongsTo(db.volume, { foreignKey: "id_volume" }) // Remove if not used
 db.volume.hasMany(db.section, { foreignKey: "id_volume" })
 
 module.exports = db;

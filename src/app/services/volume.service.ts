@@ -13,10 +13,12 @@ export class VolumeService {
 
     constructor(private http: HttpClient) { }
 
+    // Not used yet, if it is not used at the end, remove this line
     getAll() {
         return this.http.get(baseUrl);
     }
 
+    // Not used yet, if it is not used at the end, remove this line
     get(id: number) {
         return this.http.get(`${baseUrl}/${id}`);
     }
@@ -25,8 +27,8 @@ export class VolumeService {
         return this.http.get(`${baseUrl}/articles`);
     }
 
-    findByLabel(label: string) {
-        return this.http.get(`${baseUrl}/articles/?search=${label}`);
+    findByLabel(search: string) {
+        return this.http.get(`${baseUrl}/articles/?search=${search}`);
     }
 }
 

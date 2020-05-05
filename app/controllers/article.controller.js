@@ -48,7 +48,6 @@ exports.create = (req, res) => {
 // Retrieve all Articles from the database.
 exports.findAll = (req, res) => {
     const search = req.query.label;
-    // OP.or et OP.and vont pouvoir servir ici
     var condition = search ? {
         [Op.or]: [
             { label: { [Op.like]: `%${search}%` } },
@@ -79,7 +78,6 @@ exports.findAllWithAllForeignTable = (req, res) => {
             { description: { [Op.like]: `%${search}%` } }
         ]
     } : null;
-    // Ne prends plus les id vu que je retoune direct la listes des elements
     Article.findAll({
         attributes: ['id', 'label', 'description', 'comment', 'unit', 'minimal_quantity', 'price', 'percent_workforce', 'subcontractable', 'up_to_date'],
         where: condition, include: [{ model: Item }, { model: SubmitGroup }, { model: Status, as: "statuses" }],

@@ -11,10 +11,12 @@ export class SectionService {
 
     constructor(private http: HttpClient) { }
 
+    // Not used yet, if it is not used at the end, remove this line
     getAll() {
         return this.http.get(baseUrl);
     }
 
+    // Not used yet, if it is not used at the end, remove this line
     get(id: number) {
         return this.http.get(`${baseUrl}/${id}`);
     }

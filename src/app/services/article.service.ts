@@ -18,11 +18,14 @@ export class ArticleService {
     private http: HttpClient) { }
 
 
-  // Peut etre qu'on peux factoriser le code pour les deux fonctions getAll() (ce qui se fera dans le controller)
+
+  // Not used yet, if it is not used at the end, remove this line
   getAll() {
     return this.http.get(baseUrl);
   }
 
+
+  // Not used yet, if it is not used at the end, remove this line
   getAllwithAllJoinTable() {
     return this.http.get(`${baseUrl}/all`);
   }
@@ -51,14 +54,4 @@ export class ArticleService {
   findByLabel(label: string) {
     return this.http.get(`${baseUrl}/all/?search=${label}`);
   }
-
-  // getItem(article) {
-  //   return this.itemService.get(article.id_item);
-  // }
-  // getSection(article) {
-  //   return this.itemService.getSection(article.id_item);
-  // }
-  // getVolume(article) {
-  //   return this.itemService.getVolume(article.id_item);
-  // }
 }

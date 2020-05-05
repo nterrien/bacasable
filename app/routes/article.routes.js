@@ -7,9 +7,11 @@ module.exports = app => {
     router.post("/articles", articles.create);
 
     // Retrieve all Articles
+    // Not used yet, if it is not used at the end, remove this line
     router.get("/articles", articles.findAll);
 
     // Retrieve all Articles with a join
+    // Not used yet, if it is not used at the end, remove this line
     router.get("/articles/all", articles.findAllWithAllForeignTable);
 
     // Retrieve a single Article with id
