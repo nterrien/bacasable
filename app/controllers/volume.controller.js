@@ -72,7 +72,7 @@ exports.findAllWithSections = (req, res) => {
 
 // Retrieve all Volume from the database with a join on Item table
 exports.findAllWithArticles = (req, res) => {
-    const search = req.query.label;
+    const search = req.query.search;
     var condition = search ? {
         [Op.or]: [
             { label: { [Op.like]: `%${search}%` } },
@@ -82,10 +82,11 @@ exports.findAllWithArticles = (req, res) => {
 
     Volume.findAll({
         attributes: ['id', 'label', 'comment'],
-        order: [['id', 'ASC'],
-        ['sections', 'id', 'ASC'],
-        ['sections', 'items', 'id', 'ASC'],
-        ['sections', 'items', 'articles', 'id', 'ASC']],
+        order: [
+            ['id', 'ASC'],
+            ['sections', 'id', 'ASC'],
+            ['sections', 'items', 'id', 'ASC'],
+            ['sections', 'items', 'articles', 'id', 'ASC']],
         include: [{
             model: Section,
             attributes: ['id', 'label', 'comment'],

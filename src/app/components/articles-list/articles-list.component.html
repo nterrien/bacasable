@@ -1,10 +1,10 @@
 <div class="list row">
     <div class="col-md-8">
         <div class="input-group mb-3">
-            <!-- <input type="text" class="form-control" (change)="searchLabel()" type="text"
-                placeholder="Recherche des articles selon leur titre ou leur description" [(ngModel)]="label" /> -->
+            <input type="text" class="form-control" (change)="searchLabel()" type="text"
+                placeholder="Recherche des articles selon leur intitulé ou leur description" [(ngModel)]="label" />
             <div class="input-group-append">
-                <!-- <button class="btn btn-outline-secondary" type="button" (click)="searchLabel()">Chercher</button> -->
+                <button class="btn btn-outline-secondary" type="button" (click)="searchLabel()">Chercher</button>
                 <a routerLink="/articles/add" class="btn btn-outline-secondary">Ajouter</a>
             </div>
         </div>
@@ -14,7 +14,7 @@
         <table class="table table-bordered table-responsive">
             <thead>
                 <tr>
-                    <th class="col-md-1" scope="col">Titre</th>
+                    <th class="col-md-1" scope="col">Intitulé</th>
                     <th class="col-md-1" scope="col">Description</th>
                     <th class="col-md-1" scope="col">Commentaire</th>
                     <th class="col-md-1" scope="col">Groupe de Soumission</th>
