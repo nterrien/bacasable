@@ -1,41 +1,64 @@
 <div class="list row">
     <div class="col-md-8">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" (change)="searchLabel()" type="text"
+            <input type="text" class="form-control" (keyup)="searchLabel()" type="text"
                 placeholder="Recherche des articles selon leur intitulé ou leur description" [(ngModel)]="label" />
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" (click)="searchLabel()">Chercher</button>
                 <a routerLink="/articles/add" class="btn btn-outline-secondary">Ajouter</a>
             </div>
+            <input type="checkbox" id="scales" name="description" (change)="searchLabel()" [(ngModel)]="searchDescription">
+            <label for="description">Rechercher aussi sur la description</label>
         </div>
     </div>
-    <div class="container-fluid">
-        <h4>Magasin</h4>
-        <table class="table table-bordered table-responsive">
-            <thead>
-                <tr>
-                    <th class="col-md-1" scope="col">Intitulé</th>
-                    <th class="col-md-1" scope="col">Description</th>
-                    <th class="col-md-1" scope="col">Commentaire</th>
-                    <th class="col-md-1" scope="col">Groupe de Soumission</th>
-                    <th class="col-md-1" scope="col">Unité</th>
-                    <th class="col-md-1" scope="col">Quantité minimale</th>
-                    <th class="col-md-1" scope="col">Prix</th>
-                    <th class="col-md-1" scope="col">Pourcentage de main d'oeuvre</th>
-                    <th class="col-md-1" scope="col">Sous traitable</th>
-                    <th class="col-md-1" scope="col">À jour</th>
-                    <th class="col-md-1" scope="col">Status</th>
-                    <th class="col-md-1" scope="col">Actions</th>
+</div>
+<div class="container-fluid">
+    <h4>Magasin</h4>
+    <table class="table table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="col-md-1" scope="col">Intitulé</th>
+                <th class="col-md-1" scope="col">Description</th>
+                <th class="col-md-1" scope="col">Commentaire</th>
+                <th class="col-md-1" scope="col">Groupe de Soumission</th>
+                <th class="col-md-1" scope="col">Unité</th>
+                <th class="col-md-1" scope="col">Quantité minimale</th>
+                <th class="col-md-1" scope="col">Prix</th>
+                <th class="col-md-1" scope="col">Pourcentage de main d'oeuvre</th>
+                <th class="col-md-1" scope="col">Sous traitable</th>
+                <th class="col-md-1" scope="col">À jour</th>
+                <th class="col-md-1" scope="col">Status</th>
+                <th class="col-md-1" scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let volume of volumes;">
+                <tr class=" bg-dark text-white">
+                    <td>
+                        {{ volume.label }}
+                    </td>
+                    <td>
+                        {{ volume.comment }}
+                    </td>
+                    <!-- This is to color the background of the row -->
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let volume of volumes;">
-                    <tr class=" bg-dark text-white">
+                <ng-container *ngFor="let section of volume.sections;">
+                    <tr class="bg-secondary text-white">
                         <td>
-                            {{ volume.label }}
+                            {{ section.label }}
                         </td>
                         <td>
-                            {{ volume.comment }}
+                            {{ section.comment }}
                         </td>
                         <!-- This is to color the background of the row -->
                         <td></td>
@@ -49,13 +72,13 @@
                         <td></td>
                         <td></td>
                     </tr>
-                    <ng-container *ngFor="let section of volume.sections;">
-                        <tr class="bg-secondary text-white">
+                    <ng-container *ngFor="let item of section.items;">
+                        <tr class="bg-light text-black">
                             <td>
-                                {{ section.label }}
+                                {{ item.label }}
                             </td>
                             <td>
-                                {{ section.comment }}
+                                {{ item.comment }}
                             </td>
                             <!-- This is to color the background of the row -->
                             <td></td>
@@ -69,74 +92,53 @@
                             <td></td>
                             <td></td>
                         </tr>
-                        <ng-container *ngFor="let item of section.items;">
-                            <tr class="bg-light text-black">
-                                <td>
-                                    {{ item.label }}
-                                </td>
-                                <td>
-                                    {{ item.comment }}
-                                </td>
-                                <!-- This is to color the background of the row -->
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr class="bg-white text-black" *ngFor=" let article of item.articles">
-                                <td>
-                                    {{ article.label }}
-                                </td>
-                                <td>
-                                    {{ article.description }}
-                                </td>
-                                <td>
-                                    {{ article.comment }}
-                                </td>
+                        <tr class="bg-white text-black" *ngFor=" let article of item.articles">
+                            <td>
+                                {{ article.label }}
+                            </td>
+                            <td>
+                                {{ article.description }}
+                            </td>
+                            <td>
+                                {{ article.comment }}
+                            </td>
 
-                                <td>
-                                    {{ article.submit_group != null ? article.submit_group.label : "Aucun" }}
-                                </td>
-                                <td>
-                                    {{ article.unit }}
-                                </td>
-                                <td>
-                                    {{ article.minimal_quantity }}
-                                </td>
-                                <td>
-                                    {{ article.price }}
-                                </td>
-                                <td>
-                                    {{ article.percent_workforce }}
-                                </td>
-                                <td>
-                                    {{article.subcontractable ? ("Oui") : ("Non")}}
-                                </td>
-                                <td>
-                                    {{article.up_to_date ? ("Oui") : ("Non")}}
-                                </td>
+                            <td>
+                                {{ article.submit_group != null ? article.submit_group.label : "Aucun" }}
+                            </td>
+                            <td>
+                                {{ article.unit }}
+                            </td>
+                            <td>
+                                {{ article.minimal_quantity }}
+                            </td>
+                            <td>
+                                {{ article.price }}
+                            </td>
+                            <td>
+                                {{ article.percent_workforce }}
+                            </td>
+                            <td>
+                                {{article.subcontractable ? ("Oui") : ("Non")}}
+                            </td>
+                            <td>
+                                {{article.up_to_date ? ("Oui") : ("Non")}}
+                            </td>
 
-                                <td> {{ article.statuses.label }} </td>
+                            <td> {{ article.statuses.label }} </td>
 
-                                <td>
-                                    <a class="badge badge-warning" href="/articles/{{ article.id }}">
-                                        Editer
-                                    </a>
-                                    <button class="badge badge-danger mr-2" (click)="deleteArticle(article.id)">
-                                        Supprimer
-                                    </button>
-                                </td>
-                            </tr>
-                        </ng-container>
+                            <td>
+                                <a class="badge badge-warning" href="/articles/{{ article.id }}">
+                                    Editer
+                                </a>
+                                <button class="badge badge-danger mr-2" (click)="deleteArticle(article.id)">
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
                     </ng-container>
                 </ng-container>
-            </tbody>
-        </table>
-    </div>
+            </ng-container>
+        </tbody>
+    </table>
 </div>

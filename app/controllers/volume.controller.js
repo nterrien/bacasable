@@ -73,12 +73,19 @@ exports.findAllWithSections = (req, res) => {
 // Retrieve all Volume from the database with a join on Item table
 exports.findAllWithArticles = (req, res) => {
     const search = req.query.search;
-    var condition = search ? {
-        [Op.or]: [
-            { label: { [Op.like]: `%${search}%` } },
-            { description: { [Op.like]: `%${search}%` } }
-        ]
-    } : null;
+    const searchDescription = req.params.searchDescription;
+    if (searchDescription == 'true') {
+        var condition = search ? {
+            [Op.or]: [
+                { label: { [Op.like]: `%${search}%` } },
+                { description: { [Op.like]: `%${search}%` } }
+            ]
+        } : null;
+    }
+    else {
+        var condition = search ? { label: { [Op.like]: `%${search}%` } } : null;
+    }
+    // TODO Demander si par defaut faudriat mieux chercher sur le label seul ou sur le lable + description
 
     Volume.findAll({
         attributes: ['id', 'label', 'comment'],

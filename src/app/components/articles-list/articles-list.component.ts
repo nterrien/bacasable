@@ -10,8 +10,8 @@ import { VolumeService } from 'src/app/services/volume.service';
 export class ArticlesListComponent implements OnInit {
 
   volumes: any;
-
   label = ''; //For the research function
+  searchDescription= true; //For the research function
 
   constructor(private articleService: ArticleService, private volumeService: VolumeService) { }
 
@@ -24,7 +24,7 @@ export class ArticlesListComponent implements OnInit {
   }
 
   searchLabel() {
-    this.volumeService.findByLabel(this.label) 
+    this.volumeService.findByLabel(this.label,this.searchDescription)
       .subscribe(
         data => {
           this.volumes = data;

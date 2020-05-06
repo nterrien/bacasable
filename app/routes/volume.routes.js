@@ -15,8 +15,11 @@ module.exports = app => {
     // Not used yet, if it is not used at the end, remove this line
     router.get("/volume/sections", volumes.findAllWithSections);
 
-    // Retrieve all Volumes
+    // Retrieve all Volumes with a join on Article table
     router.get("/volume/articles", volumes.findAllWithArticles);
+
+    // Retrieve all Volumes with a join on Article table, and the choice to search on Description or not
+    router.get("/volume/articles/:searchDescription", volumes.findAllWithArticles);
 
     // Retrieve a single Volume with id
     // Not used yet, if it is not used at the end, remove this line
