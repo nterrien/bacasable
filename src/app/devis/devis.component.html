@@ -1,0 +1,33 @@
+<div class="col-sm-8 col-sm-offset-2">
+    <form [formGroup]="devisForm" (ngSubmit)="onSubmitForm()">
+        <mat-form-field appearance="fill">
+            <mat-label for="name">Nom entreprise</mat-label>
+            <input matInput type="text" id="name" formControlName="name">
+        </mat-form-field>
+        <br>
+        <div formArrayName="articles">
+            <h3>Prestations</h3>
+            <div *ngFor="let articleControl of getArticlesInDevis().controls; let i = index">
+                <mat-form-field appearance="fill">
+                    <input matInput placeholder="Choisir un article" type="text" [formControlName]="i"
+                        [matAutocomplete]="articleAuto">
+                    <mat-autocomplete #articleAuto="matAutocomplete" [displayWith]="displayFn">
+                        <mat-option *ngFor="let article of filteredArticles[i] | async" [value]="article">
+                            {{article.label}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <p *ngIf="devisForm.value['articles'][i] != null"> {{devisForm.value["articles"][i].description}}</p>
+            </div>
+            <button type="button" class="btn btn-success" (click)="onAddArticle()" [disabled]="articles==null">Ajouter
+                un articles</button>
+        </div>
+        <button type="submit" class="btn btn-primary">Soumettre</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="log()">Log</button>
+    </form>
+</div>
+
+
+
+
+<!-- <p>Prix : {{article.description}}</p> -->

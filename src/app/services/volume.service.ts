@@ -23,12 +23,12 @@ export class VolumeService {
         return this.http.get(`${baseUrl}/${id}`);
     }
 
-    getAllwithArticles(){
+    getAllwithArticles() {
         return this.http.get(`${baseUrl}/articles`);
     }
 
-    findByLabel(search: string) {
-        return this.http.get(`${baseUrl}/articles/?search=${search}`);
+    findByLabel(search: string, searchDescription: boolean) {
+        return this.http.get(`${baseUrl}/articles/${searchDescription}/?search=${search}`);
     }
 }
 

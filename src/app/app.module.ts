@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -8,19 +8,27 @@ import { AppComponent } from './app.component';
 import { AddArticleComponent } from './components/add-article/add-article.component';
 import { ArticleEditComponent } from './components/article-edit/article-edit.component';
 import { ArticlesListComponent } from './components/articles-list/articles-list.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule} from './material.module';
+import { DevisComponent } from './devis/devis.component'
+
 
 @NgModule({
   declarations: [
     AppComponent,
     AddArticleComponent,
     ArticleEditComponent,
-    ArticlesListComponent
+    ArticlesListComponent,
+    DevisComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
