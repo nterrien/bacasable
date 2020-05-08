@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { Article } from '../models/article.model';
-import { getLocaleFirstDayOfWeek } from '@angular/common';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-devis',
@@ -16,7 +16,7 @@ export class DevisComponent implements OnInit {
   constructor(private articleService: ArticleService, private formBuilder: FormBuilder) { }
 
   devisForm: FormGroup;
-  articleControl = new FormControl();
+  // articleControl = new FormControl();
   articles: any;
   filteredArticles: Observable<Article[]>[];
 
@@ -24,7 +24,7 @@ export class DevisComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.getArticles();
-    this.filteredArticles=[]
+    this.filteredArticles = []
   }
 
   initForm() {
@@ -56,16 +56,16 @@ export class DevisComponent implements OnInit {
 
 
   //Affichage
-  
+
   displayFn(article): string {
     return article ? article.label : '';
   }
 
-  log() {
-    console.log("articles", this.articles)
-    console.log("filteredarticles", this.filteredArticles)
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.devisForm.value['articles'], event.previousIndex, event.currentIndex);
+    moveItemInArray(this.getArticlesInDevis().controls, event.previousIndex, event.currentIndex)
+    moveItemInArray(this.filteredArticles, event.previousIndex, event.currentIndex);
   }
-
 
   // DB
   getArticles() {
