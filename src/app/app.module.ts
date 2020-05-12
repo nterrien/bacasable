@@ -11,6 +11,7 @@ import { ArticlesListComponent } from './components/articles-list/articles-list.
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule} from './material.module';
 import { DevisComponent } from './devis/devis.component'
+import { AddCustomerComponent } from './devis/add-customer';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { DevisComponent } from './devis/devis.component'
     AddArticleComponent,
     ArticleEditComponent,
     ArticlesListComponent,
-    DevisComponent
+    DevisComponent,
+    AddCustomerComponent,
   ],
   imports: [
     BrowserModule,

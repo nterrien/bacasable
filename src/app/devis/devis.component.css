@@ -1,7 +1,5 @@
 mat-form-field {
   width: 100%;
-  margin-left: 0%;
-  margin-right: 0%;
 }
 
 .example-list {
@@ -13,10 +11,9 @@ mat-form-field {
   padding: 10px 10px;
 }
 
-/* div.example-list:hover {
-  background: #eee;
+.dragable:hover {
   cursor: move;
-} */
+}
 
 .example-handle {
   color: #ccc;

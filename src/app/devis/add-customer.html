@@ -1,0 +1,22 @@
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Nom de l'entreprise</mat-label>
+        <input matInput [(ngModel)]="data.name">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Adresse de l'entreprise</mat-label>
+        <input matInput [(ngModel)]="data.address">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Mail de l'entreprise</mat-label>
+        <input matInput [(ngModel)]="data.mail">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Commentaire</mat-label>
+        <input matInput [(ngModel)]="data.comment">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Fermer</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ajouter</button>
+</div>

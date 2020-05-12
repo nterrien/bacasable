@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Article } from '../models/article.model';
 
 const baseUrl = 'http://localhost:8080/api/articles';
 
@@ -18,8 +19,6 @@ export class ArticleService {
     private http: HttpClient) { }
 
 
-
-  // Not used yet, if it is not used at the end, remove this line
   getAll() {
     return this.http.get(baseUrl);
   }
@@ -34,12 +33,7 @@ export class ArticleService {
     return this.http.get(`${baseUrl}/${id}`);
   }
 
-  create(data: {
-    label: string; description: string; comment: string; unit: string;
-    minimal_quantity: number; price: number; percent_workforce: number;
-    subcontractable: boolean; up_to_date: boolean; id_submit: any; id_item: number;
-    status: number;
-  }) {
+  create(data: Article) {
     return this.http.post(baseUrl, data);
   }
 

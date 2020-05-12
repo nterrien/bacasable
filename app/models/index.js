@@ -27,6 +27,8 @@ db.submit_group = require("./submit_group.js")(sequelize, Sequelize);
 db.section = require("./section.js")(sequelize, Sequelize);
 db.volume = require("./volume.js")(sequelize, Sequelize);
 
+db.customer = require("./customer.js")(sequelize, Sequelize);
+
 
 // article's associations
 db.article.belongsTo(db.item, { foreignKey: "id_item" }) // Remove if not used
