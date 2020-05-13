@@ -13,12 +13,19 @@ mat-form-field {
 
 .dragable:hover {
   cursor: move;
+  width: 100%;
 }
+
+/* Revoir apres ou c'est que je met les bonnes classes */
+
+/* .cdk-drag-handle {
+  cursor: move;
+} */
 
 .example-handle {
   color: #ccc;
   cursor: move;
-  width: 24px;
+  width: 100%;
   height: 24px;
   /* TODO Find how to put the arrow left to the field */
   float: left;

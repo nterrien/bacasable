@@ -40,7 +40,7 @@
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
-                    <div class="dragable" cdkDragHandle>
+                    <div cdkDragHandle class="dragable">
                         <p *ngIf="devisForm.value['articles'][i] != null">
                             {{devisForm.value["articles"][i].description}}
                         </p>

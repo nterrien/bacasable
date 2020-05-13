@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ArticleService } from '../services/article.service';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
@@ -21,7 +21,8 @@ export class DevisComponent implements OnInit {
     private articleService: ArticleService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private elRef: ElementRef
   ) { }
 
   devisForm: FormGroup;
@@ -30,6 +31,8 @@ export class DevisComponent implements OnInit {
   newCustomer: Customer = { name: '', address: '', comment: '', mail: '', id_city: null }
   filteredArticles: Observable<Article[]>[];
   filteredCustomers: Observable<Customer[]>;
+
+  @ViewChild('buttonOpenNewCustomer') element: ElementRef;
 
 
   ngOnInit(): void {
@@ -64,11 +67,21 @@ export class DevisComponent implements OnInit {
   }
 
   onAddCustomer() {
+    console.log(this.elRef.nativeElement.offsetLeft);
+    console.log(this.elRef.nativeElement.offsetTop);
     const dialogRef = this.dialog.open(AddCustomerComponent, {
-      width: '250px',
+      width: '240px',
+      // Choisis la position du popup, je l'ai mis un peu n'improte ou, ce qui compte c'est de savoir comment on le bouge,
+      // et aussi de savoir qu'on peux le placer par rapport aux coordonnée d'un ature éléments sur la page
+      position: {
+        top: this.elRef.nativeElement.offsetTop + 120 + 'px',
+        left: this.elRef.nativeElement.offsetLeft + 50 + 'px'
+      },
+      // positionRelativeToElement: , https://stackoverflow.com/questions/58757670/angular-material-how-to-position-matdialog-relative-to-element
+      // hasBackdrop: false, Pour pas quitter quand on clique a coté de la fenetre
       data: this.newCustomer
     });
-    //console.log(this.newCustomer)
+    console.log(dialogRef)
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -85,15 +98,16 @@ export class DevisComponent implements OnInit {
 
   //Affichage
 
-  displayArticles(article): string {
+  displayArticles(article: Article): string {
     return article ? article.label : '';
   }
 
-  displayCustomer(customer): string {
+  displayCustomer(customer: Customer): string {
     return customer ? customer.name + " ; " + customer.address : '';
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    //Peut etre que patchValue pourrait faire ça en une seul ligne ? 
     moveItemInArray(this.devisForm.value['articles'], event.previousIndex, event.currentIndex);
     moveItemInArray(this.getArticlesInDevis().controls, event.previousIndex, event.currentIndex)
     moveItemInArray(this.filteredArticles, event.previousIndex, event.currentIndex);
