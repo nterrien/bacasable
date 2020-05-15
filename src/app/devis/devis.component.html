@@ -18,42 +18,6 @@
         </mat-form-field>
         <button type="button" class="btn btn-success" (click)="onAddCustomer()"> Ajouter un nouveau client</button>
         <br>
-        <br>
-        <br>
-        <div cdkDropList (cdkDropListDropped)="drop($event)">
-            <div formArrayName="articles">
-                <h3>Prestations</h3>
-                <div class="example-list" cdkDrag cdkDragLockAxis="y"
-                    *ngFor="let articleControl of getArticlesInDevis().controls; let i = index">
-                    <!-- Pour avoir une fleche qui dit ou prendre -->
-                    <div class="example-handle" cdkDragHandle>
-                        <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
-                            </path>
-                            <path d="M0 0h24v24H0z" fill="none"></path>
-                        </svg>
-                    </div>
-                    <mat-form-field appearance="fill">
-                        <input matInput placeholder="Choisir un article" type="text" [formControlName]="i"
-                            [matAutocomplete]="articleAuto">
-                        <mat-autocomplete #articleAuto="matAutocomplete" [displayWith]="displayArticles">
-                            <mat-option *ngFor="let article of filteredArticles[i] | async" [value]="article">
-                                {{article.label}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                    <div cdkDragHandle class="dragable">
-                        <p *ngIf="devisForm.value['articles'][i] != null">
-                            {{devisForm.value["articles"][i].description}}
-                        </p>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-success" (click)="onAddArticle()"
-                    [disabled]="articles==null">Ajouter
-                    un article</button>
-            </div>
-        </div>
         <br><br>
         <h3>Prestations V4</h3>
         <div cdkDropList (cdkDropListDropped)="dropSection($event)">
@@ -73,7 +37,7 @@
                             <mat-label for="name">Nom de la section</mat-label>
                             <input matInput type="text" formControlName="name">
                         </mat-form-field>
-                        <!-- Y -->
+                        <!-- Article -->
                         <div formArrayName="articles">
                             <div class="example-list"
                                 *ngFor="let articleControl of sectionControl['controls'].articles['controls']; let iy=index">
@@ -103,7 +67,6 @@
                                         <p *ngIf="devisForm.value['section'][ix]['articles'][iy] != null">
                                             {{devisForm.value['section'][ix]['articles'][iy].description}}
                                         </p>
-                                        {{devisForm.value['section'][ix]['articles'][iy]  |json}}
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +74,7 @@
                                 [disabled]="articles==null">Ajouter
                                 un article</button>
                         </div>
-                        <!-- Y End-->
+                        <!-- Article End-->
                     </div>
                 </div>
                 <button type="button" class="btn btn-success" (click)="addSection()" [disabled]="articles==null">Ajouter

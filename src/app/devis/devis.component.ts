@@ -49,12 +49,9 @@ export class DevisComponent implements OnInit {
     this.devisForm = this.formBuilder.group({
       name: ['ICO', Validators.required],
       client: ['', Validators.required],
-      articles: this.formBuilder.array([]),
       'section': this.formBuilder.array([])
     });
   }
-
-  ///Toutes les nouvelles fonctions lié à les groueps de soumission + articles
 
   initSection() {
     const ix = this.filteredArticlesInSection ? this.filteredArticlesInSection.length : 0;
@@ -100,25 +97,8 @@ export class DevisComponent implements OnInit {
 
   }
 
-  //////////////////////////////////////////////////////////////////////
-  getArticlesInDevis(): FormArray {
-    return this.devisForm.get('articles') as FormArray;
-  }
-
   getSectionInDevis(): FormArray {
     return this.devisForm.get('section') as FormArray;
-  }
-
-  onAddArticle() {
-    const newArticleControl = this.formBuilder.control(null, Validators.required);
-    this.getArticlesInDevis().push(newArticleControl);
-    const i = this.filteredArticles ? this.filteredArticles.length : 0;
-    this.filteredArticles[i] = newArticleControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.label),
-        map(label => label ? this._filterArticle(label) : this.articles.slice()))
-
   }
 
   onAddCustomer() {
@@ -158,12 +138,12 @@ export class DevisComponent implements OnInit {
     return customer ? customer.name + " ; " + customer.address : '';
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    //Peut etre que patchValue pourrait faire ça en une seul ligne ? 
-    moveItemInArray(this.devisForm.value['articles'], event.previousIndex, event.currentIndex);
-    moveItemInArray(this.getArticlesInDevis().controls, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.filteredArticles, event.previousIndex, event.currentIndex);
-  }
+  // drop(event: CdkDragDrop<string[]>) {
+  //   //Peut etre que patchValue pourrait faire ça en une seul ligne ? 
+  //   moveItemInArray(this.devisForm.value['articles'], event.previousIndex, event.currentIndex);
+  //   moveItemInArray(this.getArticlesInDevis().controls, event.previousIndex, event.currentIndex);
+  //   moveItemInArray(this.filteredArticles, event.previousIndex, event.currentIndex);
+  // }
 
   dropSection(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
