@@ -58,7 +58,7 @@ export class DevisComponent implements OnInit {
   initSection() {
     return this.formBuilder.group({
       //  ---------------------forms fields on x level ------------------------
-      'name': ['', [Validators.required]],
+      'name': ['S', [Validators.required]],
       // ---------------------------------------------------------------------
       'articles': this.formBuilder.array([
         this.initArticles()
@@ -69,7 +69,7 @@ export class DevisComponent implements OnInit {
   initArticles() {
     return this.formBuilder.group({
       //  ---------------------forms fields on y level ------------------------
-      'label': ['', [Validators.required]]
+      'label': ['A', [Validators.required]]
       // --------------------------------------------------------------------
     })
   }
@@ -88,6 +88,10 @@ export class DevisComponent implements OnInit {
   //////////////////////////////////////////////////////////////////////
   getArticlesInDevis(): FormArray {
     return this.devisForm.get('articles') as FormArray;
+  }
+
+  getSectionInDevis(): FormArray {
+    return this.devisForm.get('section') as FormArray;
   }
 
   onAddArticle() {
@@ -145,8 +149,13 @@ export class DevisComponent implements OnInit {
   drop(event: CdkDragDrop<string[]>) {
     //Peut etre que patchValue pourrait faire ça en une seul ligne ? 
     moveItemInArray(this.devisForm.value['articles'], event.previousIndex, event.currentIndex);
-    moveItemInArray(this.getArticlesInDevis().controls, event.previousIndex, event.currentIndex)
+    moveItemInArray(this.getArticlesInDevis().controls, event.previousIndex, event.currentIndex);
     moveItemInArray(this.filteredArticles, event.previousIndex, event.currentIndex);
+  }
+
+  dropSection(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
+    moveItemInArray(this.getSectionInDevis().controls, event.previousIndex, event.currentIndex);
   }
 
   // DB

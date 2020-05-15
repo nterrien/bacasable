@@ -56,7 +56,7 @@
         </div>
         <br><br>
         <h3>Prestations V4</h3>
-        <div cdkDropList>
+        <div cdkDropList (cdkDropListDropped)="dropSection($event)">
             <div formArrayName="section">
                 <div class="example-list" cdkDrag cdkDragLockAxis="y" class="example-list"
                     *ngFor="let sectionControl of devisForm['controls'].section['controls']; let ix=index">
