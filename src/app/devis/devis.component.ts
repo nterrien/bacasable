@@ -46,10 +46,46 @@ export class DevisComponent implements OnInit {
     this.devisForm = this.formBuilder.group({
       name: ['ICO', Validators.required],
       client: ['', Validators.required],
-      articles: this.formBuilder.array([])
+      articles: this.formBuilder.array([]),
+      'section': this.formBuilder.array([
+        this.initSection()
+      ])
     });
   }
 
+  ///Toutes les nouvelles fonctions lié à les groueps de soumission + articles
+
+  initSection() {
+    return this.formBuilder.group({
+      //  ---------------------forms fields on x level ------------------------
+      'name': ['', [Validators.required]],
+      // ---------------------------------------------------------------------
+      'articles': this.formBuilder.array([
+        this.initArticles()
+      ])
+    });
+  }
+
+  initArticles() {
+    return this.formBuilder.group({
+      //  ---------------------forms fields on y level ------------------------
+      'label': ['', [Validators.required]]
+      // --------------------------------------------------------------------
+    })
+  }
+
+  addSection() {
+    const control = <FormArray>this.devisForm.controls['section'];
+    control.push(this.initSection());
+  }
+
+
+  addArticles(ix) {
+    const control = (<FormArray>this.devisForm.controls['section']).at(ix).get('articles') as FormArray;
+    control.push(this.initArticles());
+  }
+
+  //////////////////////////////////////////////////////////////////////
   getArticlesInDevis(): FormArray {
     return this.devisForm.get('articles') as FormArray;
   }
