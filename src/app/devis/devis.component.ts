@@ -30,48 +30,54 @@ export class DevisComponent implements OnInit {
   customers: any;
   newCustomer: Customer = { name: '', address: '', comment: '', mail: '', id_city: null }
   filteredArticles: Observable<Article[]>[];
+
+  filteredArticlesInSection: Observable<Article[]>[][];
   filteredCustomers: Observable<Customer[]>;
 
   @ViewChild('buttonOpenNewCustomer') element: ElementRef;
 
 
   ngOnInit(): void {
-    this.initForm();
     this.getArticles();
     this.getCustomers();
-    this.filteredArticles = []
+    this.initForm();
+    this.filteredArticles = [];
   }
 
   initForm() {
+    this.filteredArticlesInSection = [];
     this.devisForm = this.formBuilder.group({
       name: ['ICO', Validators.required],
       client: ['', Validators.required],
       articles: this.formBuilder.array([]),
-      'section': this.formBuilder.array([
-        this.initSection()
-      ])
+      'section': this.formBuilder.array([])
     });
   }
 
   ///Toutes les nouvelles fonctions lié à les groueps de soumission + articles
 
   initSection() {
+    const ix = this.filteredArticlesInSection ? this.filteredArticlesInSection.length : 0;
+    this.filteredArticlesInSection[ix] = [];
+    const newArticleControl = this.initArticles();
+    const i = this.filteredArticlesInSection[ix] ? this.filteredArticlesInSection[ix].length : 0;
+    this.filteredArticlesInSection[ix][i] = newArticleControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.label),
+        map(label => label ? this._filterArticle(label) : this.articles.slice()))
     return this.formBuilder.group({
       //  ---------------------forms fields on x level ------------------------
       'name': ['', [Validators.required]],
       // ---------------------------------------------------------------------
       'articles': this.formBuilder.array([
-        this.initArticles()
+        newArticleControl
       ])
     });
   }
 
   initArticles() {
-    return this.formBuilder.group({
-      //  ---------------------forms fields on y level ------------------------
-      'article': ['', [Validators.required]]
-      // --------------------------------------------------------------------
-    })
+    return this.formBuilder.control(null, Validators.required)
   }
 
   addSection() {
@@ -80,9 +86,18 @@ export class DevisComponent implements OnInit {
   }
 
 
-  addArticles(ix) {
+  addArticles(ix: number) {
     const control = (<FormArray>this.devisForm.controls['section']).at(ix).get('articles') as FormArray;
-    control.push(this.initArticles());
+    const newArticleControl = this.initArticles()
+    control.push(newArticleControl);
+
+    const i = this.filteredArticlesInSection[ix] ? this.filteredArticlesInSection[ix].length : 0;
+    this.filteredArticlesInSection[ix][i] = newArticleControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.label),
+        map(label => label ? this._filterArticle(label) : this.articles.slice()))
+
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -107,8 +122,6 @@ export class DevisComponent implements OnInit {
   }
 
   onAddCustomer() {
-    console.log(this.elRef.nativeElement.offsetLeft);
-    console.log(this.elRef.nativeElement.offsetTop);
     const dialogRef = this.dialog.open(AddCustomerComponent, {
       width: '240px',
       // Choisis la position du popup, je l'ai mis un peu n'improte ou, ce qui compte c'est de savoir comment on le bouge,
@@ -121,7 +134,6 @@ export class DevisComponent implements OnInit {
       // hasBackdrop: false, Pour pas quitter quand on clique a coté de la fenetre
       data: this.newCustomer
     });
-    console.log(dialogRef)
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -156,6 +168,7 @@ export class DevisComponent implements OnInit {
   dropSection(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
     moveItemInArray(this.getSectionInDevis().controls, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.filteredArticlesInSection, event.previousIndex, event.currentIndex);
   }
 
   // DB
@@ -166,6 +179,12 @@ export class DevisComponent implements OnInit {
           this.articles = data;
           // Used in dev, should be removed
           // console.log(data);
+
+          // Je devrais surement pas fiare comme ça, 
+          //mais j'aimerai bien ajouter une section une fois que
+          // les articles on été recuperer maisj e sais pas comment fiare
+          //poru attendre que la focntion ait ifini autrement uqe comme ça 
+          this.addSection()
         },
         error => {
           console.log(error);
@@ -191,7 +210,6 @@ export class DevisComponent implements OnInit {
   }
 
   saveCustomer(data) {
-    //console.log(data);
     this.customerService.create(data)
       .subscribe(
         response => {
@@ -207,12 +225,12 @@ export class DevisComponent implements OnInit {
 
   private _filterArticle(value: string): Article[] {
     const filterValue = value.toLowerCase();
-    return this.articles.filter(article => article.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.articles.filter((article: Article) => article.label.toLowerCase().indexOf(filterValue) === 0);
   }
 
   private _filterCustomer(value: string): Customer[] {
     const filterValue = value.toLowerCase();
-    return this.customers.filter(customer => customer.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.customers.filter((customer: Customer) => customer.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
 }

@@ -77,7 +77,7 @@
                         <div formArrayName="articles">
                             <div class="example-list"
                                 *ngFor="let articleControl of sectionControl['controls'].articles['controls']; let iy=index">
-                                <div formGroupName="{{iy}}">
+                                <div>
                                     <div class="example-handle" cdkDragHandle>
                                         <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
                                             <path
@@ -89,18 +89,21 @@
                                     <mat-form-field appearance="fill">
                                         <mat-label for="name">Nom de l'article</mat-label>
                                         <input matInput placeholder="Choisir un article" type="text"
-                                            formControlName="article" [matAutocomplete]="articleAuto">
+                                            formControlName="{{iy}}" [matAutocomplete]="articleAuto">
                                         <mat-autocomplete #articleAuto="matAutocomplete"
                                             [displayWith]="displayArticles">
-                                            <mat-option *ngFor="let article of articles" [value]="article">
+                                            <mat-option
+                                                *ngFor="let article of filteredArticlesInSection[ix][iy] | async"
+                                                [value]="article">
                                                 {{article.label}}
                                             </mat-option>
                                         </mat-autocomplete>
                                     </mat-form-field>
                                     <div cdkDragHandle class="dragable">
-                                        <p *ngIf="devisForm.value['section'][ix]['articles'][iy]['article'] != null">
-                                            {{devisForm.value['section'][ix]['articles'][iy]['article'].description}}
+                                        <p *ngIf="devisForm.value['section'][ix]['articles'][iy] != null">
+                                            {{devisForm.value['section'][ix]['articles'][iy].description}}
                                         </p>
+                                        {{devisForm.value['section'][ix]['articles'][iy]  |json}}
                                     </div>
                                 </div>
                             </div>
