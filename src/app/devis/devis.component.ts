@@ -58,7 +58,7 @@ export class DevisComponent implements OnInit {
   initSection() {
     return this.formBuilder.group({
       //  ---------------------forms fields on x level ------------------------
-      'name': ['S', [Validators.required]],
+      'name': ['', [Validators.required]],
       // ---------------------------------------------------------------------
       'articles': this.formBuilder.array([
         this.initArticles()
@@ -69,7 +69,7 @@ export class DevisComponent implements OnInit {
   initArticles() {
     return this.formBuilder.group({
       //  ---------------------forms fields on y level ------------------------
-      'label': ['A', [Validators.required]]
+      'article': ['', [Validators.required]]
       // --------------------------------------------------------------------
     })
   }

@@ -88,8 +88,20 @@
                                     </div>
                                     <mat-form-field appearance="fill">
                                         <mat-label for="name">Nom de l'article</mat-label>
-                                        <input matInput type="text" formControlName="label">
+                                        <input matInput placeholder="Choisir un article" type="text"
+                                            formControlName="article" [matAutocomplete]="articleAuto">
+                                        <mat-autocomplete #articleAuto="matAutocomplete"
+                                            [displayWith]="displayArticles">
+                                            <mat-option *ngFor="let article of articles" [value]="article">
+                                                {{article.label}}
+                                            </mat-option>
+                                        </mat-autocomplete>
                                     </mat-form-field>
+                                    <div cdkDragHandle class="dragable">
+                                        <p *ngIf="devisForm.value['section'][ix]['articles'][iy]['article'] != null">
+                                            {{devisForm.value['section'][ix]['articles'][iy]['article'].description}}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-success" (click)="addArticles(ix)"
@@ -99,8 +111,8 @@
                         <!-- Y End-->
                     </div>
                 </div>
-                <button type="button" class="btn btn-success" (click)="addSection()"
-                    [disabled]="articles==null">Ajouter une section</button>
+                <button type="button" class="btn btn-success" (click)="addSection()" [disabled]="articles==null">Ajouter
+                    une section</button>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Soumettre</button>
