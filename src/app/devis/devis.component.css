@@ -13,7 +13,6 @@ mat-form-field {
 
 .dragable:hover {
   cursor: move;
-  width: 100%;
 }
 
 /* Revoir apres ou c'est que je met les bonnes classes */
