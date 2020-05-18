@@ -1,4 +1,4 @@
-<div class="col-sm-8 col-sm-offset-2">
+<div class="col-sm-12 col-sm-offset-2">
     <form [formGroup]="devisForm" (ngSubmit)="onSubmitForm()">
         <mat-form-field appearance="fill">
             <mat-label for="name">Nom entreprise</mat-label>
@@ -17,6 +17,14 @@
         <br>
         <br><br>
         <h3>Prestations</h3>
+        <div class="row">
+            <p class='col-sm-6'>Description</p>
+            <p class='col-sm-1'>TM</p>
+            <p class='col-sm-1'>Q</p>
+            <p class='col-sm-1'>U</p>
+            <p class='col-sm-1'>PU</p>
+            <p class='col-sm-2'>Montant</p>
+        </div>
         <div cdkDropList (cdkDropListDropped)="dropSection($event)" formArrayName="section">
             <div cdkDropListGroup class="example-list" cdkDrag cdkDragLockAxis="y" class="example-list"
                 *ngFor="let sectionControl of devisForm['controls'].section['controls']; let ix=index">
@@ -29,7 +37,7 @@
                             <path d="M0 0h24v24H0z" fill="none"></path>
                         </svg>
                     </div>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field class='col-sm-6' appearance="fill">
                         <mat-label for="name">Nom de la section</mat-label>
                         <input matInput type="text" formControlName="name">
                     </mat-form-field>
@@ -48,20 +56,38 @@
                                         <path d="M0 0h24v24H0z" fill="none"></path>
                                     </svg>
                                 </div>
-                                <mat-form-field appearance="fill">
-                                    <mat-label for="name">Nom de l'article</mat-label>
-                                    <input matInput placeholder="Choisir un article" type="text"
-                                        formControlName="{{iy}}" [matAutocomplete]="articleAuto">
-                                    <mat-autocomplete #articleAuto="matAutocomplete" [displayWith]="displayArticles">
-                                        <mat-option *ngFor="let article of filteredArticlesInSection[ix][iy] | async"
-                                            [value]="article">
-                                            {{article.label}}
-                                        </mat-option>
-                                    </mat-autocomplete>
+                                <div formGroupName="{{iy}}">
+                                    <mat-form-field class='col-sm-6' appearance="fill">
+                                        <mat-label for="name">Nom de l'article</mat-label>
+                                        <input matInput placeholder="Choisir un article" type="text"
+                                            formControlName="article" [matAutocomplete]="articleAuto">
+                                        <mat-autocomplete #articleAuto="matAutocomplete"
+                                            [displayWith]="displayArticles">
+                                            <mat-option
+                                                *ngFor="let article of filteredArticlesInSection[ix][iy] | async"
+                                                [value]="article">
+                                                {{article.label}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                    <mat-form-field class='col-sm-1' appearance="fill">
+                                    <mat-label for="name">Type de marché</mat-label>
+                                    <input matInput type="text" formControlName="market_type">
                                 </mat-form-field>
+                                <mat-form-field class='col-sm-1' appearance="fill">
+                                    <mat-label for="name">Quantité</mat-label>
+                                    <input matInput type="number" formControlName="quantity">
+                                </mat-form-field>
+                                    <p class="col-sm-1" *ngIf="devisForm.value['section'][ix]['articles'][iy]['article'] != null">
+                                        {{devisForm.value['section'][ix]['articles'][iy]['article'].unit}}
+                                    </p>
+                                    <p class="col-sm-1" *ngIf="devisForm.value['section'][ix]['articles'][iy]['article'] != null">
+                                        {{devisForm.value['section'][ix]['articles'][iy]['article'].price}}
+                                    </p>
+                                </div>
                                 <div cdkDragHandle class="dragable">
-                                    <p *ngIf="devisForm.value['section'][ix]['articles'][iy] != null">
-                                        {{devisForm.value['section'][ix]['articles'][iy].description}}
+                                    <p *ngIf="devisForm.value['section'][ix]['articles'][iy]['article'] != null">
+                                        {{devisForm.value['section'][ix]['articles'][iy]['article'].description}}
                                     </p>
                                 </div>
                             </div>

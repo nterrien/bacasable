@@ -78,7 +78,11 @@ export class DevisComponent implements OnInit {
   }
 
   initArticles() {
-    return this.formBuilder.control(null, Validators.required)
+    return this.formBuilder.group({
+      'article': ['', [Validators.required]],
+      'market_type': ['', [Validators.required]],
+      'quantity': [0, [Validators.required, Validators.pattern(/^[0-9]\d*$/)]]
+    })
   }
 
   addSection() {
