@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { Article } from '../models/article.model';
 import { Customer } from '../models/customer.model';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CustomerService } from '../services/customer.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCustomerComponent } from './add-customer'
@@ -34,12 +34,15 @@ export class DevisComponent implements OnInit {
   filteredArticlesInSection: Observable<Article[]>[][];
   filteredCustomers: Observable<Customer[]>;
 
+  numberOfSection: number;
+
   @ViewChild('buttonOpenNewCustomer') element: ElementRef;
 
 
   ngOnInit(): void {
     this.getArticles();
     this.getCustomers();
+    this.numberOfSection = 0
     this.initForm();
     this.filteredArticles = [];
   }
@@ -54,6 +57,7 @@ export class DevisComponent implements OnInit {
   }
 
   initSection() {
+    this.numberOfSection = this.numberOfSection + 1;
     const ix = this.filteredArticlesInSection ? this.filteredArticlesInSection.length : 0;
     this.filteredArticlesInSection[ix] = [];
     const newArticleControl = this.initArticles();
@@ -64,9 +68,9 @@ export class DevisComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterArticle(label) : this.articles.slice()))
     return this.formBuilder.group({
-      //  ---------------------forms fields on x level ------------------------
+      // This ID is used to allow drag n drop between two different lists
+      'id': this.numberOfSection,
       'name': ['', [Validators.required]],
-      // ---------------------------------------------------------------------
       'articles': this.formBuilder.array([
         newArticleControl
       ])
@@ -99,6 +103,10 @@ export class DevisComponent implements OnInit {
 
   getSectionInDevis(): FormArray {
     return this.devisForm.get('section') as FormArray;
+  }
+
+  getArticlesInSection(ix: number): FormArray {
+    return this.devisForm.get(['section', ix, 'articles']) as FormArray;
   }
 
   onAddCustomer() {
@@ -145,6 +153,33 @@ export class DevisComponent implements OnInit {
   //   moveItemInArray(this.filteredArticles, event.previousIndex, event.currentIndex);
   // }
 
+  dropArticle(event: CdkDragDrop<string[]>, ix: number) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(this.devisForm.value['section'][ix]['articles'], event.previousIndex, event.currentIndex);
+      moveItemInArray(this.getArticlesInSection(ix).controls, event.previousIndex, event.currentIndex);
+      moveItemInArray(this.filteredArticlesInSection[ix], event.previousIndex, event.currentIndex);
+    } else {
+      const currentSectionIndex = Number(event.container.data);
+      const previousSectionIndex = Number(event.previousContainer.data);
+      transferArrayItem(this.devisForm.value['section'][previousSectionIndex]['articles'],
+        this.devisForm.value['section'][currentSectionIndex]['articles'],
+        event.previousIndex,
+        event.currentIndex);
+      transferArrayItem(this.getArticlesInSection(previousSectionIndex).controls,
+        this.getArticlesInSection(currentSectionIndex).controls,
+        event.previousIndex,
+        event.currentIndex);
+      transferArrayItem(this.filteredArticlesInSection[previousSectionIndex],
+        this.filteredArticlesInSection[currentSectionIndex],
+        event.previousIndex,
+        event.currentIndex);
+    }
+  }
+
+  getConnectedList(): any[] {
+    return this.devisForm.value["section"].map(x => `${x.id}`);
+  }
+
   dropSection(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
     moveItemInArray(this.getSectionInDevis().controls, event.previousIndex, event.currentIndex);
@@ -189,7 +224,7 @@ export class DevisComponent implements OnInit {
         });
   }
 
-  saveCustomer(data) {
+  saveCustomer(data: Customer) {
     this.customerService.create(data)
       .subscribe(
         response => {
