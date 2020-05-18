@@ -62,7 +62,7 @@ export class DevisComponent implements OnInit {
     this.filteredArticlesInSection[ix] = [];
     const newArticleControl = this.initArticles();
     const i = this.filteredArticlesInSection[ix] ? this.filteredArticlesInSection[ix].length : 0;
-    this.filteredArticlesInSection[ix][i] = newArticleControl.valueChanges
+    this.filteredArticlesInSection[ix][i] = newArticleControl.controls['article'].valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
@@ -95,14 +95,12 @@ export class DevisComponent implements OnInit {
     const control = (<FormArray>this.devisForm.controls['section']).at(ix).get('articles') as FormArray;
     const newArticleControl = this.initArticles()
     control.push(newArticleControl);
-
     const i = this.filteredArticlesInSection[ix] ? this.filteredArticlesInSection[ix].length : 0;
-    this.filteredArticlesInSection[ix][i] = newArticleControl.valueChanges
+    this.filteredArticlesInSection[ix][i] = newArticleControl.controls['article'].valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterArticle(label) : this.articles.slice()))
-
   }
 
   getSectionInDevis(): FormArray {
