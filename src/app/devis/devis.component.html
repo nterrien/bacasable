@@ -34,8 +34,9 @@
                         <input matInput type="text" formControlName="name">
                     </mat-form-field>
                     <!-- Article -->
-                    <div cdkDropList id="{{sectionControl['controls'].id.value}}" [cdkDropListData]="ix" (cdkDropListDropped)="dropArticle($event,ix)"
-                        [cdkDropListConnectedTo]="getConnectedList()" formArrayName="articles">
+                    <div cdkDropList id="{{sectionControl['controls'].id.value}}" [cdkDropListData]="ix"
+                        (cdkDropListDropped)="dropArticle($event,ix)" [cdkDropListConnectedTo]="getConnectedList()"
+                        formArrayName="articles">
                         <div class="example-list" cdkDrag
                             *ngFor="let articleControl of sectionControl['controls'].articles['controls']; let iy=index">
                             <div>
@@ -65,10 +66,11 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-success" (click)="addArticles(ix)"
-                            [disabled]="articles==null">Ajouter
-                            un article</button>
                     </div>
+                    <br>
+                    <button type="button" class="btn btn-success" (click)="addArticles(ix)"
+                        [disabled]="articles==null">Ajouter
+                        un article</button>
                     <!-- Article End-->
                 </div>
             </div>
