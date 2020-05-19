@@ -9,6 +9,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { CustomerService } from '../services/customer.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCustomerComponent } from './add-customer'
+import { MarketTypeService } from '../services/market_type.service';
 
 @Component({
   selector: 'app-devis',
@@ -22,12 +23,14 @@ export class DevisComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private customerService: CustomerService,
-    private elRef: ElementRef
+    private elRef: ElementRef,
+    private marketTypeService: MarketTypeService,
   ) { }
 
   devisForm: FormGroup;
   articles: any;
   customers: any;
+  marketType: any;
   newCustomer: Customer = { name: '', address: '', comment: '', mail: '', id_city: null }
   filteredArticles: Observable<Article[]>[];
 
@@ -42,6 +45,7 @@ export class DevisComponent implements OnInit {
   ngOnInit(): void {
     this.getArticles();
     this.getCustomers();
+    this.getMarketType();
     this.numberOfSection = 0
     this.initForm();
     this.filteredArticles = [];
@@ -220,6 +224,17 @@ export class DevisComponent implements OnInit {
             startWith(''),
             map(value => typeof value === 'string' ? value : value.name),
             map(name => name ? this._filterCustomer(name) : this.customers.slice()))
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+  getMarketType() {
+    this.marketTypeService.getAll()
+      .subscribe(
+        data => {
+          this.marketType = data;
         },
         error => {
           console.log(error);

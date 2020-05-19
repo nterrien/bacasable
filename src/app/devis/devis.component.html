@@ -71,8 +71,12 @@
                                         </mat-autocomplete>
                                     </mat-form-field>
                                     <mat-form-field class='col-sm-1' appearance="fill">
-                                        <mat-label for="name">Type de marché</mat-label>
-                                        <input matInput type="text" formControlName="market_type">
+                                        <mat-label for="market_type">Type de marché</mat-label>
+                                        <mat-select for="market_type">
+                                            <mat-option *ngFor="let MT of marketType" [value]="MT">
+                                                {{MT.acronym}}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                     <mat-form-field class='col-sm-1' appearance="fill">
                                         <mat-label for="name">Quantité</mat-label>
@@ -86,7 +90,7 @@
                                     </span>
                                     <!-- Afficahge sommaire d'un montant, mais faudras en rediscuter je pense qu'il peyux y avoir des subtilité selon les cas notamment le market type et la quatitty -->
                                     <span class="col-sm-2">
-                                        {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] : '' ) : ''}}
+                                        {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] +"€": '' ) : ''}}
                                     </span>
                                 </div>
                                 <div cdkDragHandle class="dragable col-sm-6">

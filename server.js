@@ -26,6 +26,7 @@ require("./app/routes/item.routes")(app);
 require("./app/routes/section.routes")(app);
 require("./app/routes/volume.routes")(app);
 require("./app/routes/customer.routes")(app);
+require("./app/routes/market_type.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
