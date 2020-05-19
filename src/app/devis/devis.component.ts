@@ -13,6 +13,7 @@ import { MarketTypeService } from '../services/market_type.service';
 
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { SubmitGroupService } from '../services/submit-group.service';
 registerLocaleData(localeFr);
 
 @Component({
@@ -30,6 +31,7 @@ export class DevisComponent implements OnInit {
   customers: any;
   marketType: any;
   TVAList: any[];
+  submitGroup: any;
 
   // Used in for autocompletion
   filteredArticlesInSection: Observable<Article[]>[][];
@@ -49,12 +51,14 @@ export class DevisComponent implements OnInit {
     private customerService: CustomerService,
     private elRef: ElementRef,
     private marketTypeService: MarketTypeService,
+    private submitGroupService: SubmitGroupService,
   ) { }
 
   ngOnInit(): void {
     this.getArticles();
     this.getCustomers();
-    this.getMarketType();
+    this.getMarketTypes();
+    this.getSubmitGroups();
     this.TVAList = [{ 'label': "Régime TVA : Nouvelle construction (21%)", 'tva': 0.21 },
     { 'label': "Régime TVA : Rénovation résidentiel < 10 ans (21%)", 'tva': 0.21 },
     { 'label': "Régime TVA : Rénovation résidentiel > 10 ans (6%)", 'tva': 0.06 }]
@@ -97,7 +101,10 @@ export class DevisComponent implements OnInit {
     return this.formBuilder.group({
       'article': ['', [Validators.required]],
       'market_type': ['', [Validators.required]],
-      'quantity': [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{0,2})?$/)]]
+      'quantity': [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{0,2})?$/)]],
+      'submit_group': ['', [Validators.required]],
+      //Je sais pas trop ce que c'est donc je reste sur un truc basique
+      'risk_factor': [0, [Validators.required]]
     });
   }
 
@@ -181,6 +188,10 @@ export class DevisComponent implements OnInit {
 
   displayCustomer(customer: Customer): string {
     return customer ? customer.name + " ; " + customer.address : '';
+  }
+
+  displaySubmitGroup(submit): string {
+    return submit ? submit.label : '';
   }
 
   private _filterArticle(value: string): Article[] {
@@ -270,11 +281,22 @@ export class DevisComponent implements OnInit {
         });
   }
 
-  getMarketType() {
+  getMarketTypes() {
     this.marketTypeService.getAll()
       .subscribe(
         data => {
           this.marketType = data;
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+  getSubmitGroups() {
+    this.submitGroupService.getAll()
+      .subscribe(
+        data => {
+          this.submitGroup = data;
         },
         error => {
           console.log(error);

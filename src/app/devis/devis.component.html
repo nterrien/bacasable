@@ -30,12 +30,16 @@
         <br>
         <h3>Prestations</h3>
         <div class="row">
-            <p class='col-sm-6'>Description</p>
+            <p class='col-sm-5'>Description</p>
             <p class='col-sm-1'>TM</p>
             <p class='col-sm-1'>Q</p>
-            <p class='col-sm-1'>U</p>
-            <p class='col-sm-1'>PU</p>
-            <p class='col-sm-2'>Montant</p>
+            <span class='row col-sm-1'>
+                <p class='col-sm-6'>U</p>
+                <p class='col-sm-6'>PU</p>
+            </span>
+            <p class='col-sm-1'>Montant</p>
+            <p class='col-sm-2'>Groupe de Soumission</p>
+            <p class='col-sm-1'>Facteur de risque </p>
         </div>
         <div cdkDropList (cdkDropListDropped)="dropSection($event)" formArrayName="section">
             <div cdkDropListGroup class="example-list" cdkDrag cdkDragLockAxis="y" class="example-list"
@@ -49,7 +53,7 @@
                             <path d="M0 0h24v24H0z" fill="none"></path>
                         </svg>
                     </div>
-                    <mat-form-field class='col-sm-6' appearance="fill">
+                    <mat-form-field class='col-sm-5' appearance="fill">
                         <mat-label for="name">Nom de la section</mat-label>
                         <input matInput type="text" title="{{devisForm.value['section'][ix].name}}"
                             formControlName="name">
@@ -70,7 +74,7 @@
                             </div>
                             <br>
                             <div class="row" formGroupName="{{iy}}">
-                                <mat-form-field class='col-sm-6' appearance="fill">
+                                <mat-form-field class='col-sm-5' appearance="fill">
                                     <mat-label for="name">Nom de l'article</mat-label>
                                     <input matInput placeholder="Choisir un article" type="text"
                                         formControlName="article" [matAutocomplete]="articleAuto"
@@ -91,19 +95,39 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field class='col-sm-1' appearance="fill">
-                                    <mat-label for="name">Quantité</mat-label>
+                                    <mat-label for="quantity">Quantité</mat-label>
                                     <input matInput type="number" formControlName="quantity">
                                 </mat-form-field>
-                                <span class="col-sm-1">
-                                    {{ devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].unit :''}}
-                                </span>
-                                <span class="col-sm-1">
-                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].price : ''}}
+                                <span class='row col-sm-1'>
+                                    <!-- Unit -->
+                                    <span class="col-sm-6">
+                                        {{ devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].unit :''}}
+                                    </span>
+                                    <!-- Price -->
+                                    <span class="col-sm-6">
+                                        {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].price : ''}}
+                                    </span>
                                 </span>
                                 <!-- Afficahge sommaire d'un montant, mais faudras en rediscuter je pense qu'il peyux y avoir des subtilité selon les cas notamment le market type et la quatitty -->
-                                <span class="col-sm-2">
+                                <span class="col-sm-1">
                                     {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? (devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] | number:'1.2-2':'fr') +" €": '' ) : ''}}
                                 </span>
+                                <mat-form-field class='col-sm-2' appearance="fill">
+                                    <mat-label for="submit_group">Groupe de Soumission</mat-label>
+                                    <input matInput type="text" formControlName="submit_group"
+                                        [matAutocomplete]="submitAuto">
+                                    <mat-autocomplete #submitAuto="matAutocomplete" [displayWith]="displaySubmitGroup">
+                                        <mat-option *ngFor="let submit of submitGroup" [title]="submit.label"
+                                            [value]="submit">
+                                            {{submit.label}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <!-- //Je sais pas trop ce que c'est donc je reste sur un truc basique -->
+                                <mat-form-field class='col-sm-1' appearance="fill">
+                                    <mat-label for="risk_factor">Facteur de risque</mat-label>
+                                    <input matInput type="number" formControlName="risk_factor">
+                                </mat-form-field>
                             </div>
                             <div cdkDragHandle class="dragable col-sm-6">
                                 <p *ngIf="devisForm.value['section'][ix]['articles'][iy]['article'] != null">
@@ -113,12 +137,12 @@
                         </div>
                         <br>
                     </div><!-- Article End-->
-                    <span class="row">
-                        <p class="col-sm-9"></p>
+                    <span class="row text-center">
+                        <p class="col-sm-10"></p>
                         <strong class="col-sm-1">
                             Sous-total :
                         </strong>
-                        <p class="col-sm-2">
+                        <p class="col-sm-1">
                             {{ getTotalPriceSection(ix) | number:'1.2-2':'fr' }} €
                         </p>
                     </span>
@@ -128,31 +152,31 @@
                 </div>
             </div>
 
-            <span class="row">
+            <span class="row text-center">
                 <p class="col-sm-9"></p>
-                <strong class="col-sm-1">
+                <strong class="col-sm-2">
                     Total HTVA :
                 </strong>
-                <p class="col-sm-2">
+                <p class="col-sm-1">
                     {{ getTotalPrice() | number:'1.2-2':'fr'}} €
                 </p>
             </span>
-            <span class="row">
+            <span class="row text-center">
                 <p class="col-sm-9"></p>
-                <strong class="col-sm-1">
+                <strong class="col-sm-2">
                     {{ devisForm.value['tva'] ? 'TVA ' + devisForm.value['tva'].tva*100  + '% :': 'TVA ?? % :'}}
                 </strong>
-                <p class="col-sm-2">
+                <p class="col-sm-1">
                     {{ devisForm.value['tva'] ? (getTotalPrice() * devisForm.value['tva'].tva | number:'1.2-2':'fr') : (0 | number:'1.2-2':'fr')}}
                     €
                 </p>
             </span>
-            <span class="row">
+            <span class="row text-center">
                 <p class="col-sm-9"></p>
-                <strong class="col-sm-1">
+                <strong class="col-sm-2">
                     Total TVAC :
                 </strong>
-                <p class="col-sm-2">
+                <p class="col-sm-1">
                     {{ devisForm.value['tva'] ? (getTotalPrice() * (1 + devisForm.value['tva'].tva)| number:'1.2-2':'fr') : (getTotalPrice() | number:'1.2-2':'fr')}}
                     €
                 </p>
