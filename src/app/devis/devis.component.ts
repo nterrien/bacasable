@@ -18,6 +18,25 @@ import { MarketTypeService } from '../services/market_type.service';
 })
 export class DevisComponent implements OnInit {
 
+  // The form
+  devisForm: FormGroup;
+
+  // List of object from the Database
+  articles: any;
+  customers: any;
+  marketType: any;
+
+  // Used in for autocompletion
+  filteredArticlesInSection: Observable<Article[]>[][];
+  filteredCustomers: Observable<Customer[]>;
+
+  // Used to have a unique id per section
+  numberOfSection: number;
+
+  // Used to add a customer
+  @ViewChild('buttonOpenNewCustomer') element: ElementRef;
+  newCustomer: Customer = { name: '', address: '', comment: '', mail: '', id_city: null }
+
   constructor(
     private articleService: ArticleService,
     private formBuilder: FormBuilder,
@@ -27,28 +46,12 @@ export class DevisComponent implements OnInit {
     private marketTypeService: MarketTypeService,
   ) { }
 
-  devisForm: FormGroup;
-  articles: any;
-  customers: any;
-  marketType: any;
-  newCustomer: Customer = { name: '', address: '', comment: '', mail: '', id_city: null }
-  filteredArticles: Observable<Article[]>[];
-
-  filteredArticlesInSection: Observable<Article[]>[][];
-  filteredCustomers: Observable<Customer[]>;
-
-  numberOfSection: number;
-
-  @ViewChild('buttonOpenNewCustomer') element: ElementRef;
-
-
   ngOnInit(): void {
     this.getArticles();
     this.getCustomers();
     this.getMarketType();
-    this.numberOfSection = 0
+    this.numberOfSection = 0;
     this.initForm();
-    this.filteredArticles = [];
   }
 
   initForm() {
@@ -70,7 +73,7 @@ export class DevisComponent implements OnInit {
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
-        map(label => label ? this._filterArticle(label) : this.articles.slice()))
+        map(label => label ? this._filterArticle(label) : this.articles.slice()));
     return this.formBuilder.group({
       // This ID is used to allow drag n drop between two different lists
       'id': this.numberOfSection,
@@ -86,7 +89,7 @@ export class DevisComponent implements OnInit {
       'article': ['', [Validators.required]],
       'market_type': ['', [Validators.required]],
       'quantity': [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{0,2})?$/)]]
-    })
+    });
   }
 
   addSection() {
@@ -94,25 +97,16 @@ export class DevisComponent implements OnInit {
     control.push(this.initSection());
   }
 
-
   addArticles(ix: number) {
     const control = (<FormArray>this.devisForm.controls['section']).at(ix).get('articles') as FormArray;
-    const newArticleControl = this.initArticles()
+    const newArticleControl = this.initArticles();
     control.push(newArticleControl);
     const i = this.filteredArticlesInSection[ix] ? this.filteredArticlesInSection[ix].length : 0;
     this.filteredArticlesInSection[ix][i] = newArticleControl.controls['article'].valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
-        map(label => label ? this._filterArticle(label) : this.articles.slice()))
-  }
-
-  getSectionInDevis(): FormArray {
-    return this.devisForm.get('section') as FormArray;
-  }
-
-  getArticlesInSection(ix: number): FormArray {
-    return this.devisForm.get(['section', ix, 'articles']) as FormArray;
+        map(label => label ? this._filterArticle(label) : this.articles.slice()));
   }
 
   onAddCustomer() {
@@ -137,12 +131,21 @@ export class DevisComponent implements OnInit {
     });
   }
 
+  getSectionInDevis(): FormArray {
+    return this.devisForm.get('section') as FormArray;
+  }
+
+  getArticlesInSection(ix: number): FormArray {
+    return this.devisForm.get(['section', ix, 'articles']) as FormArray;
+  }
+
   onSubmitForm() {
+    //TODO
     console.log(this.devisForm.value);
   }
 
 
-  //Affichage
+  //AutoComplete functions
 
   displayArticles(article: Article): string {
     return article ? article.label : '';
@@ -152,13 +155,27 @@ export class DevisComponent implements OnInit {
     return customer ? customer.name + " ; " + customer.address : '';
   }
 
-  // drop(event: CdkDragDrop<string[]>) {
-  //   //Peut etre que patchValue pourrait faire ça en une seul ligne ? 
-  //   moveItemInArray(this.devisForm.value['articles'], event.previousIndex, event.currentIndex);
-  //   moveItemInArray(this.getArticlesInDevis().controls, event.previousIndex, event.currentIndex);
-  //   moveItemInArray(this.filteredArticles, event.previousIndex, event.currentIndex);
-  // }
+  private _filterArticle(value: string): Article[] {
+    const filterValue = value.toLowerCase();
+    return this.articles.filter((article: Article) => article.label.toLowerCase().indexOf(filterValue) === 0);
+  }
 
+  private _filterCustomer(value: string): Customer[] {
+    const filterValue = value.toLowerCase();
+    return this.customers.filter((customer: Customer) => customer.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  // Drag and Drop functions
+
+  //// Section
+
+  dropSection(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
+    moveItemInArray(this.getSectionInDevis().controls, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.filteredArticlesInSection, event.previousIndex, event.currentIndex);
+  }
+
+  //// Articles
   dropArticle(event: CdkDragDrop<string[]>, ix: number) {
     if (event.previousContainer === event.container) {
       moveItemInArray(this.devisForm.value['section'][ix]['articles'], event.previousIndex, event.currentIndex);
@@ -186,13 +203,8 @@ export class DevisComponent implements OnInit {
     return this.devisForm.value["section"].map(x => `${x.id}`);
   }
 
-  dropSection(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
-    moveItemInArray(this.getSectionInDevis().controls, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.filteredArticlesInSection, event.previousIndex, event.currentIndex);
-  }
-
   // DB
+
   getArticles() {
     this.articleService.getAll()
       .subscribe(
@@ -205,7 +217,7 @@ export class DevisComponent implements OnInit {
           //mais j'aimerai bien ajouter une section une fois que
           // les articles on été recuperer maisj e sais pas comment fiare
           //poru attendre que la focntion ait ifini autrement uqe comme ça 
-          this.addSection()
+          this.addSection();
         },
         error => {
           console.log(error);
@@ -223,7 +235,7 @@ export class DevisComponent implements OnInit {
           this.filteredCustomers = this.devisForm.controls['client'].valueChanges.pipe(
             startWith(''),
             map(value => typeof value === 'string' ? value : value.name),
-            map(name => name ? this._filterCustomer(name) : this.customers.slice()))
+            map(name => name ? this._filterCustomer(name) : this.customers.slice()));
         },
         error => {
           console.log(error);
@@ -252,17 +264,5 @@ export class DevisComponent implements OnInit {
         error => {
           console.log(error);
         });
-
   }
-
-  private _filterArticle(value: string): Article[] {
-    const filterValue = value.toLowerCase();
-    return this.articles.filter((article: Article) => article.label.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  private _filterCustomer(value: string): Customer[] {
-    const filterValue = value.toLowerCase();
-    return this.customers.filter((customer: Customer) => customer.name.toLowerCase().indexOf(filterValue) === 0);
-  }
-
 }
