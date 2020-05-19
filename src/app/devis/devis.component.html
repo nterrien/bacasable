@@ -8,7 +8,8 @@
             <mat-label for="client">Client</mat-label>
             <input matInput type="text" id="client" formControlName="client" [matAutocomplete]="customerAuto">
             <mat-autocomplete #customerAuto="matAutocomplete" [displayWith]="displayCustomer">
-                <mat-option *ngFor="let customer of filteredCustomers | async" [value]="customer">
+                <mat-option *ngFor="let customer of filteredCustomers | async" [title]="customer.name"
+                    [value]="customer">
                     {{customer.name}}
                 </mat-option>
             </mat-autocomplete>
@@ -50,7 +51,8 @@
                     </div>
                     <mat-form-field class='col-sm-6' appearance="fill">
                         <mat-label for="name">Nom de la section</mat-label>
-                        <input matInput type="text" formControlName="name">
+                        <input matInput type="text" title="{{devisForm.value['section'][ix].name}}"
+                            formControlName="name">
                     </mat-form-field>
                     <!-- Article -->
                     <div cdkDropList id="{{sectionControl['controls'].id.value}}" [cdkDropListData]="ix"
@@ -71,10 +73,11 @@
                                 <mat-form-field class='col-sm-6' appearance="fill">
                                     <mat-label for="name">Nom de l'article</mat-label>
                                     <input matInput placeholder="Choisir un article" type="text"
-                                        formControlName="article" [matAutocomplete]="articleAuto">
+                                        formControlName="article" [matAutocomplete]="articleAuto"
+                                        [title]="devisForm.value['section'][ix]['articles'][iy]['article'] ? devisForm.value['section'][ix]['articles'][iy]['article'].label  : ''">
                                     <mat-autocomplete #articleAuto="matAutocomplete" [displayWith]="displayArticles">
                                         <mat-option *ngFor="let article of filteredArticlesInSection[ix][iy] | async"
-                                            [value]="article">
+                                            [title]="article.label" [value]="article">
                                             {{article.label}}
                                         </mat-option>
                                     </mat-autocomplete>
@@ -82,7 +85,7 @@
                                 <mat-form-field class='col-sm-1' appearance="fill">
                                     <mat-label for="market_type">Type de marché</mat-label>
                                     <mat-select formControlName="market_type">
-                                        <mat-option *ngFor="let MT of marketType" [value]="MT.id">
+                                        <mat-option *ngFor="let MT of marketType" [title]='MT.label' [value]="MT.id">
                                             {{MT.acronym}}
                                         </mat-option>
                                     </mat-select>
@@ -140,7 +143,8 @@
                     {{ devisForm.value['tva'] ? 'TVA ' + devisForm.value['tva'].tva*100  + '% :': 'TVA ?? % :'}}
                 </strong>
                 <p class="col-sm-2">
-                    {{ devisForm.value['tva'] ? (getTotalPrice() * devisForm.value['tva'].tva | number:'1.2-2':'fr') : (0 | number:'1.2-2':'fr')}} €
+                    {{ devisForm.value['tva'] ? (getTotalPrice() * devisForm.value['tva'].tva | number:'1.2-2':'fr') : (0 | number:'1.2-2':'fr')}}
+                    €
                 </p>
             </span>
             <span class="row">
