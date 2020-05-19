@@ -99,7 +99,7 @@
                                 </span>
                                 <!-- Afficahge sommaire d'un montant, mais faudras en rediscuter je pense qu'il peyux y avoir des subtilité selon les cas notamment le market type et la quatitty -->
                                 <span class="col-sm-2">
-                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] +" €": '' ) : ''}}
+                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? (devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] | number:'1.2-2':'fr') +" €": '' ) : ''}}
                                 </span>
                             </div>
                             <div cdkDragHandle class="dragable col-sm-6">
@@ -116,7 +116,7 @@
                             Sous-total :
                         </strong>
                         <p class="col-sm-2">
-                            {{ getTotalPriceSection(ix) }} €
+                            {{ getTotalPriceSection(ix) | number:'1.2-2':'fr' }} €
                         </p>
                     </span>
                     <button type="button" class="btn btn-success" (click)="addArticles(ix)"
@@ -131,7 +131,7 @@
                     Total HTVA :
                 </strong>
                 <p class="col-sm-2">
-                    {{ getTotalPrice() }} €
+                    {{ getTotalPrice() | number:'1.2-2':'fr'}} €
                 </p>
             </span>
             <span class="row">
@@ -140,7 +140,7 @@
                     {{ devisForm.value['tva'] ? 'TVA ' + devisForm.value['tva'].tva*100  + '% :': 'TVA ?? % :'}}
                 </strong>
                 <p class="col-sm-2">
-                    {{ devisForm.value['tva'] ? getTotalPrice() * devisForm.value['tva'].tva : '0' }} €
+                    {{ devisForm.value['tva'] ? (getTotalPrice() * devisForm.value['tva'].tva | number:'1.2-2':'fr') : (0 | number:'1.2-2':'fr')}} €
                 </p>
             </span>
             <span class="row">
@@ -149,7 +149,7 @@
                     Total TVAC :
                 </strong>
                 <p class="col-sm-2">
-                    {{ devisForm.value['tva'] ? getTotalPrice() * (1 + devisForm.value['tva'].tva) : getTotalPrice() }}
+                    {{ devisForm.value['tva'] ? (getTotalPrice() * (1 + devisForm.value['tva'].tva)| number:'1.2-2':'fr') : (getTotalPrice() | number:'1.2-2':'fr')}}
                     €
                 </p>
             </span>

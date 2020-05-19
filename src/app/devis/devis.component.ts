@@ -11,6 +11,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddCustomerComponent } from './add-customer'
 import { MarketTypeService } from '../services/market_type.service';
 
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr);
+
 @Component({
   selector: 'app-devis',
   templateUrl: './devis.component.html',
