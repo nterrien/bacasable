@@ -139,12 +139,22 @@ export class DevisComponent implements OnInit {
     return this.devisForm.get(['section', ix, 'articles']) as FormArray;
   }
 
-  getTotalPriceSection(ix) {
+  getTotalPriceSection(ix: number) {
     var price = 0;
-    for (var articl in this.getArticlesInSection(ix).value) {
-      if (Number(this.getArticlesInSection(ix).value[articl]['quantity']) != NaN && this.getArticlesInSection(ix).value[articl]['article']['price'] != null) {
-        price += this.getArticlesInSection(ix).value[articl]['quantity'] * this.getArticlesInSection(ix).value[articl]['article']['price'];
+    const articles = this.getArticlesInSection(ix).value
+    for (var articl in articles) {
+      if (Number(articles[articl]['quantity']) != NaN && articles[articl]['article']['price'] != null) {
+        price += articles[articl]['quantity'] * articles[articl]['article']['price'];
       }
+    }
+    return price;
+  }
+
+  getTotalPrice() {
+    var price = 0;
+    const sections = this.getSectionInDevis().value;
+    for (var ix in sections) {
+      price += this.getTotalPriceSection(Number(ix));
     }
     return price;
   }

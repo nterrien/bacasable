@@ -101,9 +101,9 @@
                     </div><!-- Article End-->
                     <span class="row">
                         <p class="col-sm-9"></p>
-                        <p class="col-sm-1">
+                        <strong class="col-sm-1">
                             Sous-total :
-                        </p>
+                        </strong>
                         <p class="col-sm-2">
                             {{ getTotalPriceSection(ix) }} €
                         </p>
@@ -113,6 +113,34 @@
                         un article</button>
                 </div>
             </div>
+
+            <span class="row">
+                <p class="col-sm-9"></p>
+                <strong class="col-sm-1">
+                    Total HTVA :
+                </strong>
+                <p class="col-sm-2">
+                    {{ getTotalPrice() }} €
+                </p>
+            </span>
+            <span class="row">
+                <p class="col-sm-9"></p>
+                <strong class="col-sm-1">
+                    TVA ?? % :
+                </strong>
+                <p class="col-sm-2">
+                    {{ getTotalPrice() * 0 }} €
+                </p>
+            </span>
+            <span class="row">
+                <p class="col-sm-9"></p>
+                <strong class="col-sm-1">
+                    Total TVAC :
+                </strong>
+                <p class="col-sm-2">
+                    {{ getTotalPrice() * (1 + 0) }} €
+                </p>
+            </span>
             <button type="button" class="btn btn-success" (click)="addSection()" [disabled]="articles==null">Ajouter
                 une section</button>
         </div>
