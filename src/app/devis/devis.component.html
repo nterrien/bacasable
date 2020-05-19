@@ -48,51 +48,49 @@
                         <div class="example-list" cdkDrag
                             *ngFor="let articleControl of sectionControl['controls'].articles['controls']; let iy=index">
                             <div class="example-handle" cdkDragHandle>
-                                    <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
-                                        </path>
-                                        <path d="M0 0h24v24H0z" fill="none"></path>
-                                    </svg>
-                                </div>
-                                <br>
-                                <div class="row" formGroupName="{{iy}}">
-                                    <mat-form-field class='col-sm-6' appearance="fill">
-                                        <mat-label for="name">Nom de l'article</mat-label>
-                                        <input matInput placeholder="Choisir un article" type="text"
-                                            formControlName="article" [matAutocomplete]="articleAuto">
-                                        <mat-autocomplete #articleAuto="matAutocomplete"
-                                            [displayWith]="displayArticles">
-                                            <mat-option
-                                                *ngFor="let article of filteredArticlesInSection[ix][iy] | async"
-                                                [value]="article">
-                                                {{article.label}}
-                                            </mat-option>
-                                        </mat-autocomplete>
-                                    </mat-form-field>
-                                    <mat-form-field class='col-sm-1' appearance="fill">
-                                        <mat-label for="market_type">Type de marché</mat-label>
-                                        <mat-select formControlName="market_type">
-                                            <mat-option *ngFor="let MT of marketType" [value]="MT.id">
-                                                {{MT.acronym}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                    <mat-form-field class='col-sm-1' appearance="fill">
-                                        <mat-label for="name">Quantité</mat-label>
-                                        <input matInput type="number" formControlName="quantity">
-                                    </mat-form-field>
-                                    <span class="col-sm-1">
-                                        {{ devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].unit :''}}
-                                    </span>
-                                    <span class="col-sm-1">
-                                        {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].price : ''}}
-                                    </span>
-                                    <!-- Afficahge sommaire d'un montant, mais faudras en rediscuter je pense qu'il peyux y avoir des subtilité selon les cas notamment le market type et la quatitty -->
-                                    <span class="col-sm-2">
-                                        {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] +"€": '' ) : ''}}
-                                    </span>
-                                </div>
+                                <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                                    </path>
+                                    <path d="M0 0h24v24H0z" fill="none"></path>
+                                </svg>
+                            </div>
+                            <br>
+                            <div class="row" formGroupName="{{iy}}">
+                                <mat-form-field class='col-sm-6' appearance="fill">
+                                    <mat-label for="name">Nom de l'article</mat-label>
+                                    <input matInput placeholder="Choisir un article" type="text"
+                                        formControlName="article" [matAutocomplete]="articleAuto">
+                                    <mat-autocomplete #articleAuto="matAutocomplete" [displayWith]="displayArticles">
+                                        <mat-option *ngFor="let article of filteredArticlesInSection[ix][iy] | async"
+                                            [value]="article">
+                                            {{article.label}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <mat-form-field class='col-sm-1' appearance="fill">
+                                    <mat-label for="market_type">Type de marché</mat-label>
+                                    <mat-select formControlName="market_type">
+                                        <mat-option *ngFor="let MT of marketType" [value]="MT.id">
+                                            {{MT.acronym}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class='col-sm-1' appearance="fill">
+                                    <mat-label for="name">Quantité</mat-label>
+                                    <input matInput type="number" formControlName="quantity">
+                                </mat-form-field>
+                                <span class="col-sm-1">
+                                    {{ devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].unit :''}}
+                                </span>
+                                <span class="col-sm-1">
+                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? devisForm.value['section'][ix]['articles'][iy]['article'].price : ''}}
+                                </span>
+                                <!-- Afficahge sommaire d'un montant, mais faudras en rediscuter je pense qu'il peyux y avoir des subtilité selon les cas notamment le market type et la quatitty -->
+                                <span class="col-sm-2">
+                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] +"€": '' ) : ''}}
+                                </span>
+                            </div>
                             <div cdkDragHandle class="dragable col-sm-6">
                                 <p *ngIf="devisForm.value['section'][ix]['articles'][iy]['article'] != null">
                                     {{devisForm.value['section'][ix]['articles'][iy]['article'].description}}
@@ -103,8 +101,11 @@
                     </div><!-- Article End-->
                     <span class="row">
                         <p class="col-sm-9"></p>
-                        <p class="col-sm-3">
-                            Sous-total
+                        <p class="col-sm-1">
+                            Sous-total :
+                        </p>
+                        <p class="col-sm-2">
+                            {{ getTotalPriceSection(ix) }} €
                         </p>
                     </span>
                     <button type="button" class="btn btn-success" (click)="addArticles(ix)"

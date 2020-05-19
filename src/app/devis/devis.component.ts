@@ -139,11 +139,20 @@ export class DevisComponent implements OnInit {
     return this.devisForm.get(['section', ix, 'articles']) as FormArray;
   }
 
+  getTotalPriceSection(ix) {
+    var price = 0;
+    for (var articl in this.getArticlesInSection(ix).value) {
+      if (Number(this.getArticlesInSection(ix).value[articl]['quantity']) != NaN && this.getArticlesInSection(ix).value[articl]['article']['price'] != null) {
+        price += this.getArticlesInSection(ix).value[articl]['quantity'] * this.getArticlesInSection(ix).value[articl]['article']['price'];
+      }
+    }
+    return price;
+  }
+
   onSubmitForm() {
     //TODO
     console.log(this.devisForm.value);
   }
-
 
   //AutoComplete functions
 
