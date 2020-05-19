@@ -72,8 +72,8 @@
                                     </mat-form-field>
                                     <mat-form-field class='col-sm-1' appearance="fill">
                                         <mat-label for="market_type">Type de marché</mat-label>
-                                        <mat-select for="market_type">
-                                            <mat-option *ngFor="let MT of marketType" [value]="MT">
+                                        <mat-select formControlName="market_type">
+                                            <mat-option *ngFor="let MT of marketType" [value]="MT.id">
                                                 {{MT.acronym}}
                                             </mat-option>
                                         </mat-select>
