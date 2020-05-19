@@ -15,7 +15,18 @@
         </mat-form-field>
         <button type="button" class="btn btn-success" (click)="onAddCustomer()"> Ajouter un nouveau client</button>
         <br>
-        <br><br>
+        <br>
+        <mat-form-field appearance="fill">
+            <mat-label for="tva">Régime TVA</mat-label>
+            <mat-select formControlName="tva">
+                <mat-option *ngFor="let tva of TVAList" [value]="tva">
+                    {{tva.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <br>
+        <br>
         <h3>Prestations</h3>
         <div class="row">
             <p class='col-sm-6'>Description</p>
@@ -88,7 +99,7 @@
                                 </span>
                                 <!-- Afficahge sommaire d'un montant, mais faudras en rediscuter je pense qu'il peyux y avoir des subtilité selon les cas notamment le market type et la quatitty -->
                                 <span class="col-sm-2">
-                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] +"€": '' ) : ''}}
+                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] +" €": '' ) : ''}}
                                 </span>
                             </div>
                             <div cdkDragHandle class="dragable col-sm-6">
@@ -126,10 +137,10 @@
             <span class="row">
                 <p class="col-sm-9"></p>
                 <strong class="col-sm-1">
-                    TVA ?? % :
+                    {{ devisForm.value['tva'] ? 'TVA ' + devisForm.value['tva'].tva*100  + '% :': 'TVA ?? % :'}}
                 </strong>
                 <p class="col-sm-2">
-                    {{ getTotalPrice() * 0 }} €
+                    {{ devisForm.value['tva'] ? getTotalPrice() * devisForm.value['tva'].tva : '0' }} €
                 </p>
             </span>
             <span class="row">
@@ -138,7 +149,8 @@
                     Total TVAC :
                 </strong>
                 <p class="col-sm-2">
-                    {{ getTotalPrice() * (1 + 0) }} €
+                    {{ devisForm.value['tva'] ? getTotalPrice() * (1 + devisForm.value['tva'].tva) : getTotalPrice() }}
+                    €
                 </p>
             </span>
             <button type="button" class="btn btn-success" (click)="addSection()" [disabled]="articles==null">Ajouter

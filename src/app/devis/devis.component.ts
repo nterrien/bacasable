@@ -25,6 +25,7 @@ export class DevisComponent implements OnInit {
   articles: any;
   customers: any;
   marketType: any;
+  TVAList: any[];
 
   // Used in for autocompletion
   filteredArticlesInSection: Observable<Article[]>[][];
@@ -50,6 +51,9 @@ export class DevisComponent implements OnInit {
     this.getArticles();
     this.getCustomers();
     this.getMarketType();
+    this.TVAList = [{ 'label': "Régime TVA : Nouvelle construction (21%)", 'tva': 0.21 },
+    { 'label': "Régime TVA : Rénovation résidentiel < 10 ans (21%)", 'tva': 0.21 },
+    { 'label': "Régime TVA : Rénovation résidentiel > 10 ans (6%)", 'tva': 0.06 }]
     this.numberOfSection = 0;
     this.initForm();
   }
@@ -59,7 +63,8 @@ export class DevisComponent implements OnInit {
     this.devisForm = this.formBuilder.group({
       name: ['ICO', Validators.required],
       client: ['', Validators.required],
-      'section': this.formBuilder.array([])
+      section: this.formBuilder.array([]),
+      tva: [this.TVAList[0], Validators.required],
     });
   }
 
