@@ -110,14 +110,14 @@
                                 </span>
                                 <!-- Afficahge sommaire d'un montant, mais faudras en rediscuter je pense qu'il peyux y avoir des subtilité selon les cas notamment le market type et la quatitty -->
                                 <span class="col-sm-1">
-                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? (devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] | number:'1.2-2':'fr') +" €": '' ) : ''}}
+                                    {{devisForm.value['section'][ix]['articles'][iy]['article'] != null ? (devisForm.value['section'][ix]['articles'][iy]['article'].price && devisForm.value['section'][ix]['articles'][iy]['quantity'] ? (devisForm.value['section'][ix]['articles'][iy]['article'].price * devisForm.value['section'][ix]['articles'][iy]['quantity'] | number:'1.2-2':'fr') +" €": '0.00 €' ) : ''}}
                                 </span>
                                 <mat-form-field class='col-sm-2' appearance="fill">
                                     <mat-label for="submit_group">Groupe de Soumission</mat-label>
                                     <input matInput type="text" formControlName="submit_group"
                                         [matAutocomplete]="submitAuto">
                                     <mat-autocomplete #submitAuto="matAutocomplete" [displayWith]="displaySubmitGroup">
-                                        <mat-option *ngFor="let submit of submitGroup" [title]="submit.label"
+                                        <mat-option *ngFor="let submit of filteredSubmitGroupInSection[ix][iy] | async" [title]="submit.label"
                                             [value]="submit">
                                             {{submit.label}}
                                         </mat-option>

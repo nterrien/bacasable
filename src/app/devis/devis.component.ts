@@ -33,8 +33,9 @@ export class DevisComponent implements OnInit {
   TVAList: any[];
   submitGroup: any;
 
-  // Used in for autocompletion
+  // Used for autocompletion
   filteredArticlesInSection: Observable<Article[]>[][];
+  filteredSubmitGroupInSection: Observable<any[]>[][];
   filteredCustomers: Observable<Customer[]>;
 
   // Used to have a unique id per section
@@ -55,10 +56,10 @@ export class DevisComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getSubmitGroups();
     this.getArticles();
     this.getCustomers();
     this.getMarketTypes();
-    this.getSubmitGroups();
     this.TVAList = [{ 'label': "Régime TVA : Nouvelle construction (21%)", 'tva': 0.21 },
     { 'label': "Régime TVA : Rénovation résidentiel < 10 ans (21%)", 'tva': 0.21 },
     { 'label': "Régime TVA : Rénovation résidentiel > 10 ans (6%)", 'tva': 0.06 }]
@@ -68,6 +69,7 @@ export class DevisComponent implements OnInit {
 
   initForm() {
     this.filteredArticlesInSection = [];
+    this.filteredSubmitGroupInSection = [];
     this.devisForm = this.formBuilder.group({
       name: ['ICO', Validators.required],
       client: ['', Validators.required],
@@ -80,6 +82,7 @@ export class DevisComponent implements OnInit {
     this.numberOfSection = this.numberOfSection + 1;
     const ix = this.filteredArticlesInSection ? this.filteredArticlesInSection.length : 0;
     this.filteredArticlesInSection[ix] = [];
+    this.filteredSubmitGroupInSection[ix] = [];
     const newArticleControl = this.initArticles();
     const i = this.filteredArticlesInSection[ix] ? this.filteredArticlesInSection[ix].length : 0;
     this.filteredArticlesInSection[ix][i] = newArticleControl.controls['article'].valueChanges
@@ -87,6 +90,11 @@ export class DevisComponent implements OnInit {
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterArticle(label) : this.articles.slice()));
+    this.filteredSubmitGroupInSection[ix][i] = newArticleControl.controls['submit_group'].valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.label),
+        map(label => label ? this._filterSubmitGroup(label) : this.submitGroup.slice()));
     // Used to update submit group when an article is selected
     // Unsubscribe this if we do a delete article feature
     newArticleControl.controls['article'].valueChanges.subscribe(
@@ -128,6 +136,11 @@ export class DevisComponent implements OnInit {
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterArticle(label) : this.articles.slice()));
+    this.filteredSubmitGroupInSection[ix][i] = newArticleControl.controls['submit_group'].valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.label),
+        map(label => label ? this._filterSubmitGroup(label) : this.submitGroup.slice()));
     // Used to update submit group when an article is selected
     // Unsubscribe this if we do a delete article feature
     newArticleControl.controls['article'].valueChanges.subscribe(
@@ -213,6 +226,12 @@ export class DevisComponent implements OnInit {
     return this.customers.filter((customer: Customer) => customer.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
+
+  private _filterSubmitGroup(value: any): any {
+    const filterValue = value.toLowerCase();
+    return this.submitGroup.filter((submit_group: any) => submit_group.label.toLowerCase().indexOf(filterValue) === 0);
+  }
+
   // Drag and Drop functions
 
   //// Section
@@ -221,6 +240,7 @@ export class DevisComponent implements OnInit {
     moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
     moveItemInArray(this.getSectionInDevis().controls, event.previousIndex, event.currentIndex);
     moveItemInArray(this.filteredArticlesInSection, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.filteredSubmitGroupInSection, event.previousIndex, event.currentIndex);
   }
 
   //// Articles
@@ -228,7 +248,9 @@ export class DevisComponent implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(this.devisForm.value['section'][ix]['articles'], event.previousIndex, event.currentIndex);
       moveItemInArray(this.getArticlesInSection(ix).controls, event.previousIndex, event.currentIndex);
-      moveItemInArray(this.filteredArticlesInSection[ix], event.previousIndex, event.currentIndex);
+      moveItemInArray(this.filteredArticlesInSection[ix], event.previousIndex, event.currentIndex); 
+      moveItemInArray(this.filteredSubmitGroupInSection[ix], event.previousIndex, event.currentIndex);
+
     } else {
       const currentSectionIndex = Number(event.container.data);
       const previousSectionIndex = Number(event.previousContainer.data);
@@ -242,6 +264,10 @@ export class DevisComponent implements OnInit {
         event.currentIndex);
       transferArrayItem(this.filteredArticlesInSection[previousSectionIndex],
         this.filteredArticlesInSection[currentSectionIndex],
+        event.previousIndex,
+        event.currentIndex);
+      transferArrayItem(this.filteredSubmitGroupInSection[previousSectionIndex],
+        this.filteredSubmitGroupInSection[currentSectionIndex],
         event.previousIndex,
         event.currentIndex);
     }
