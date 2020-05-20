@@ -10,6 +10,7 @@ import { CustomerService } from '../services/customer.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCustomerComponent } from './add-customer'
 import { MarketTypeService } from '../services/market_type.service';
+var accents = require('remove-accents');
 
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -115,7 +116,7 @@ export class DevisComponent implements OnInit {
       'article': ['', [Validators.required]],
       'market_type': ['', [Validators.required]],
       'quantity': [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{0,2})?$/)]],
-      'submit_group': ['', [Validators.required]],
+      'submit_group': [''],
       //Je sais pas trop ce que c'est donc je reste sur un truc basique
       'risk_factor': [0, [Validators.required]]
     });
@@ -218,18 +219,18 @@ export class DevisComponent implements OnInit {
 
   private _filterArticle(value: string): Article[] {
     const filterValue = value.toLowerCase();
-    return this.articles.filter((article: Article) => article.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.articles.filter((article: Article) => accents.remove(article.label.toLowerCase()).indexOf(filterValue) != -1);
   }
 
   private _filterCustomer(value: string): Customer[] {
     const filterValue = value.toLowerCase();
-    return this.customers.filter((customer: Customer) => customer.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.customers.filter((customer: Customer) => accents.remove(customer.name.toLowerCase()).indexOf(filterValue) != -1);
   }
 
 
   private _filterSubmitGroup(value: any): any {
     const filterValue = value.toLowerCase();
-    return this.submitGroup.filter((submit_group: any) => submit_group.label.toLowerCase().indexOf(filterValue) === 0);
+    return this.submitGroup.filter((submit_group: any) => accents.remove(submit_group.label.toLowerCase()).indexOf(filterValue) != -1);
   }
 
   // Drag and Drop functions
@@ -248,7 +249,7 @@ export class DevisComponent implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(this.devisForm.value['section'][ix]['articles'], event.previousIndex, event.currentIndex);
       moveItemInArray(this.getArticlesInSection(ix).controls, event.previousIndex, event.currentIndex);
-      moveItemInArray(this.filteredArticlesInSection[ix], event.previousIndex, event.currentIndex); 
+      moveItemInArray(this.filteredArticlesInSection[ix], event.previousIndex, event.currentIndex);
       moveItemInArray(this.filteredSubmitGroupInSection[ix], event.previousIndex, event.currentIndex);
 
     } else {

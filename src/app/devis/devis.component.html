@@ -117,8 +117,8 @@
                                     <input matInput type="text" formControlName="submit_group"
                                         [matAutocomplete]="submitAuto">
                                     <mat-autocomplete #submitAuto="matAutocomplete" [displayWith]="displaySubmitGroup">
-                                        <mat-option *ngFor="let submit of filteredSubmitGroupInSection[ix][iy] | async" [title]="submit.label"
-                                            [value]="submit">
+                                        <mat-option *ngFor="let submit of filteredSubmitGroupInSection[ix][iy] | async"
+                                            [title]="submit.label" [value]="submit">
                                             {{submit.label}}
                                         </mat-option>
                                     </mat-autocomplete>
