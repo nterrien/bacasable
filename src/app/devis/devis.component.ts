@@ -87,6 +87,11 @@ export class DevisComponent implements OnInit {
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterArticle(label) : this.articles.slice()));
+    // Used to update submit group when an article is selected
+    // Unsubscribe this if we do a delete article feature
+    newArticleControl.controls['article'].valueChanges.subscribe(
+      val => val.id_submit ? newArticleControl.patchValue({ 'submit_group': this.submitGroup.find(myObj => myObj.id == val.id_submit) }) : '');
+
     return this.formBuilder.group({
       // This ID is used to allow drag n drop between two different lists
       'id': this.numberOfSection,
@@ -123,6 +128,10 @@ export class DevisComponent implements OnInit {
         startWith(''),
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterArticle(label) : this.articles.slice()));
+    // Used to update submit group when an article is selected
+    // Unsubscribe this if we do a delete article feature
+    newArticleControl.controls['article'].valueChanges.subscribe(
+      val => val.id_submit ? newArticleControl.patchValue({ 'submit_group': this.submitGroup.find(myObj => myObj.id == val.id_submit) }) : '');
   }
 
   onAddCustomer() {
