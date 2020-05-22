@@ -1,9 +1,9 @@
 <div class="container-fluid">
     <form [formGroup]="devisForm" (ngSubmit)="onSubmitForm()">
-        <mat-form-field appearance="fill">
+        <!-- <mat-form-field appearance="fill">
             <mat-label for="name">Nom entreprise</mat-label>
             <input matInput type="text" id="name" formControlName="name">
-        </mat-form-field>
+        </mat-form-field> -->
         <mat-form-field appearance="fill">
             <mat-label for="client">Client</mat-label>
             <input matInput type="text" id="client" formControlName="client" [matAutocomplete]="customerAuto">
@@ -185,5 +185,6 @@
                 une section</button>
         </div>
         <button type="submit" class="btn btn-primary">Soumettre</button>
+        <button class="btn btn-primary" (click)="generatePdf()">Open PDF</button>
     </form>
 </div>

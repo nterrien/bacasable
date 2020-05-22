@@ -7,15 +7,21 @@ import { Article } from '../models/article.model';
 import { Customer } from '../models/customer.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CustomerService } from '../services/customer.service';
+import { SubmitGroupService } from '../services/submit-group.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCustomerComponent } from './add-customer'
 import { MarketTypeService } from '../services/market_type.service';
 var accents = require('remove-accents');
 
+import { company_config } from './company-infos'
+
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
-import { SubmitGroupService } from '../services/submit-group.service';
 registerLocaleData(localeFr);
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-devis',
@@ -26,6 +32,8 @@ export class DevisComponent implements OnInit {
 
   // The form
   devisForm: FormGroup;
+
+  logo: any;
 
   // List of object from the Database
   articles: any;
@@ -61,6 +69,7 @@ export class DevisComponent implements OnInit {
     this.getArticles();
     this.getCustomers();
     this.getMarketTypes();
+    this.logo = this.getBase64ImageFromURL(company_config.logo);
     this.TVAList = [{ 'label': "Régime TVA : Nouvelle construction (21%)", 'tva': 0.21 },
     { 'label': "Régime TVA : Rénovation résidentiel < 10 ans (21%)", 'tva': 0.21 },
     { 'label': "Régime TVA : Rénovation résidentiel > 10 ans (6%)", 'tva': 0.06 }]
@@ -72,7 +81,7 @@ export class DevisComponent implements OnInit {
     this.filteredArticlesInSection = [];
     this.filteredSubmitGroupInSection = [];
     this.devisForm = this.formBuilder.group({
-      name: ['ICO', Validators.required],
+      // name: ['ICO Ingénieurie & Construction', Validators.required], 
       client: ['', Validators.required],
       section: this.formBuilder.array([]),
       tva: [this.TVAList[0], Validators.required],
@@ -201,6 +210,217 @@ export class DevisComponent implements OnInit {
   onSubmitForm() {
     //TODO
     console.log(this.devisForm.value);
+  }
+
+
+
+  generatePdf() {
+    const documentDefinition = this.getDocumentDefinition();
+    pdfMake.createPdf(documentDefinition).open();
+    //  pdfMake.createPdf(documentDefinition).print();
+    //  pdfMake.createPdf(documentDefinition).download();
+  }
+
+  getDocumentDefinition() {
+    sessionStorage.setItem('devis', JSON.stringify(this.devisForm.value));
+    return {
+      content: [{
+        table: {
+          body: [
+            [{
+              image: this.logo.__zone_symbol__value,
+              width: 49,
+              alignment: 'center'
+            }],
+            [{
+              text: "\n",
+              border: [false, false, false, true],
+            }],
+            [{
+              text: company_config.name,
+            }],
+            [{
+              text: company_config.street
+            }],
+            [{
+              text: company_config.city
+            }],
+            [{
+              text: company_config.country,
+            }],
+            [{
+              text: "Téléphone : " + company_config.phone,
+            }],
+            [{
+              text: 'Email : ' + company_config.mail,
+            }],
+            [{
+              text: 'Web : ' + company_config.website,
+              link: company_config.website,
+              border: [false, false, false, true],
+            }]
+          ]
+        },
+        layout: {
+          defaultBorder: false,
+        },
+      },
+      {
+        columns: [
+          [
+            {
+              text: this.devisForm.value.client.name,
+              style: 'client'
+            },
+            {
+              text: this.devisForm.value.client.address,
+              style: 'client'
+            },
+            {
+              text: this.devisForm.value.client.id_city, //TODo 
+              style: 'client'
+            },
+            {
+              text: "Reference : ", //Find what it is
+              style: 'metaQuote'
+            },
+            {
+              text: "Date du devis : " + this.getFullDateFormatted(new Date(Date.now())), //Find what it is
+              style: 'metaQuote'
+            },
+            {
+              text: "Version : ", //Find what it is
+              style: 'metaQuote'
+            },
+            {
+              text: this.devisForm.value.tva.label,
+              style: 'metaQuote'
+            },
+            {
+              text: "Titre : ", //Find what it is
+              style: 'metaQuote'
+            },
+            { text: "\n" }]]
+      },
+      {
+        table: {
+          // headers are automatically repeated if the table spans over multiple pages
+          // you can declare how many rows should be treated as headers
+          headerRows: 1,
+          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'], // façon de faire logique
+          // widths: [254, 27, 27, 29, 39, 59], //Façon de faire si on essaie de ressembler au maximum a la google sheets
+          body: [
+            [{ text: 'Description', style: "headerTable", border: [false, false, false, true] },
+            { text: 'TM', style: "headerTable", border: [false, false, false, true] },
+            { text: 'Q', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
+            { text: 'U', style: "headerTable", alignment: 'right', border: [false, false, false, true] },
+            { text: 'PU', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
+            { text: 'Montant', style: "headerTable", alignment: 'center', border: [false, false, false, true] }],
+            // a SUPPRIMER C'EST POUR TESTER, LE VRAI TRUC SERA AUTOMATISER
+            //Section
+            [{ colSpan: 6, text: 'INSTALLATION DE CHANTIER', style: "sectionHeader", border: [false, false, false, true] }],
+            //Article
+            [{ text: 'INSTALLATION DE CHANTIER', style: "articleLabel" },
+            { text: 'QF', style: "tableContent" },
+            { text: '1,0', style: "tableContent" },
+            { text: 'fft', style: "tableContent" },
+            { text: '2 660,00€', style: "tableContent" },
+            { text: '2 660,00€', style: "tableContent" }],
+            //Commentaire d'article
+            [{ text: '- truc \n- machin', style: "articleComment" },
+            { text: '', style: "articleComment" },
+            { text: '', style: "articleComment" },
+            { text: '', style: "articleComment" },
+            { text: '', style: "articleComment" },
+            { text: '', style: "articleComment" }],
+            //Dernier ligne de la section
+            [{ text: '', border: [false, true, false, false] },
+            { text: '', border: [false, true, false, false] },
+            { text: '', border: [false, true, false, false] },
+            { text: '', border: [false, true, false, false] },
+            { text: 'Sous-total', style: "tableContent", border: [false, true, false, false], bold: true },
+            { text: '2 660,00€', style: "tableContent", border: [false, true, false, false] }]
+          ]
+        },
+        layout: {
+          defaultBorder: false,
+        },
+      }],
+      defaultStyle: {
+        fontSize: 11
+        //font : 'Arial' // but i have to find it first
+      },
+      styles: {
+        client: {
+          fontSize: 9,
+          bold: true,
+          lineHeight: 1.5,
+          margin: [316, 0, 0, 0]
+        },
+        metaQuote: {
+          bold: true,
+          lineHeight: 1.2
+        },
+        headerTable: {
+          fontSize: 9,
+          bold: true,
+        },
+        sectionHeader: {
+          fontSize: 9,
+          bold: true,
+          fillColor: '#d9d9d9'
+        },
+        articleLabel: {
+          fontSize: 10,
+        },
+        tableContent: {
+          fontSize: 9,
+        },
+        articleComment: {
+          fontSize: 9,
+          color: '#666666',
+        },
+        //dans la table du 9 sauf pour le nom de l'article
+      }
+    };
+  }
+
+  getFullDateFormatted(date: Date) {
+    var result = '';
+    if (date.getUTCDate() < 10) {
+      result += '0' + date.getUTCDate() + "/";
+    }
+    else {
+      result += date.getUTCDate() + "/";
+    }
+    if (date.getUTCMonth() < 10) {
+      result += '0' + date.getUTCMonth() + "/";
+    }
+    else {
+      result += date.getUTCMonth() + "/";
+    }
+    result += date.getUTCFullYear();
+    return result
+  }
+
+  getBase64ImageFromURL(url: string) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL("image/png");
+        resolve(dataURL);
+      };
+      img.onerror = error => {
+        reject(error);
+      };
+      img.src = url;
+    });
   }
 
   //AutoComplete functions
