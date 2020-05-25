@@ -234,13 +234,6 @@ export class DevisComponent implements OnInit {
     sessionStorage.setItem('devis', JSON.stringify(this.devisForm.value));
     return {
       content: [
-        { // Test
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
-            body: this.constructRowArticlesTable()
-          }
-        },// Fin Test
         {
           table: {
             body: [
