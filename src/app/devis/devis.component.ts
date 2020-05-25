@@ -209,11 +209,13 @@ export class DevisComponent implements OnInit {
   }
 
   onSubmitForm() {
-    //TODO
+    // TODO
     console.log(this.devisForm.value);
   }
 
 
+
+  // PDF
 
   generatePdf() {
     const documentDefinition = this.getDocumentDefinition();
@@ -314,8 +316,6 @@ export class DevisComponent implements OnInit {
         },
         {
           table: {
-            // headers are automatically repeated if the table spans over multiple pages
-            // you can declare how many rows should be treated as headers
             headerRows: 1,
             widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'], // façon de faire logique
             // widths: [254, 27, 27, 29, 39, 59], //Façon de faire si on essaie de ressembler au maximum a la google sheets
@@ -324,13 +324,13 @@ export class DevisComponent implements OnInit {
           layout: {
             defaultBorder: false,
             // Add the dashed border line
-            // TODO
-            // hLineStyle: function (i, node) {
-            //   if (node.table.body[i] && i != 0 && node.table.body[i][1]['text'] != undefined && node.table.body[i][2]['text'] != undefined && node.table.body[i][3]['text'] != undefined && node.table.body[i][4]['text'] != undefined && node.table.body[i][5]['text'] != undefined) {
-            //     return { dash: { length: 2, space: 2 } };
-            //   }
-            //   return null;
-            //},
+            hLineStyle: function (i, node) {
+              if (node.table.body[i] && i != 0 && i != node.table.body.length - 1 && i != node.table.body.length - 2 &&
+                node.table.body[i][0]['style'] != "sectionHeader" && node.table.body[i - 1][0]['style'] != "sectionHeader") {
+                return { dash: { length: 2, space: 2 } };
+              }
+              return null;
+            },
           },
         },
         {
@@ -422,6 +422,82 @@ export class DevisComponent implements OnInit {
     };
   }
 
+  applyDottedBorder(i, node) {
+    return (node.table.body[i] && i != 0 &&
+      (node.table.body[i][1]['text'] != undefined && node.table.body[i][2]['text'] != undefined && node.table.body[i][3]['text'] != undefined && node.table.body[i][4]['text'] != undefined && node.table.body[i][5]['text'] != undefined)
+      && (node.table.body[i - 1][1]['text'] != undefined && node.table.body[i - 1][2]['text'] != undefined && node.table.body[i - 1][3]['text'] != undefined && node.table.body[i - 1][4]['text'] != undefined && node.table.body[i - 1][5]['text'] != undefined)
+      && i != node.table.length - 1 && i != node.table.length - 2 && i != node.table.length - 3)
+  }
+
+
+  constructRowArticlesTable() {
+    var table: any;
+    var totalPrice = 0;
+    table = [
+      [{ text: 'Description', style: "headerTable", border: [false, false, false, true] },
+      { text: 'TM', style: "headerTable", border: [false, false, false, true] },
+      { text: 'Q', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
+      { text: 'U', style: "headerTable", alignment: 'right', border: [false, false, false, true] },
+      { text: 'PU', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
+      { text: 'Montant', style: "headerTable", alignment: 'center', border: [false, false, false, true] }]];
+    for (var section in this.devisForm.value['section']) {
+      var subprice = 0;
+      // Section 
+      table.push([{ colSpan: 6, text: this.devisForm.value['section'][section]['name'], style: "sectionHeader", border: [false, false, false, true] }])
+      for (var article in this.devisForm.value['section'][section]['articles']) {
+        const currentArticle = this.devisForm.value['section'][section]['articles'][article];
+        var price = currentArticle['quantity'] * currentArticle['article']['price']
+        subprice += price ? price : 0;
+        const border = [false, true, false, false];
+        table.push(
+          // Article
+          [{ text: currentArticle['article']['label'], border: border, style: "articleLabel" },
+          { text: currentArticle['market_type'] ? this.marketType.filter((myObj => myObj.id == currentArticle['market_type']))[0].acronym : '', border: border, style: "tableContent" },
+          { text: this.formatNumber(currentArticle['quantity']), noWrap: true, border: border, alignment: 'right', style: "tableContent" },
+          { text: currentArticle['article']['unit'], border: border, alignment: 'right', style: "tableContent" },
+          { text: this.formatNumber(currentArticle['article']['price']) + '€', border: border, alignment: 'right', style: "tableContent" },
+          { text: this.formatNumber(price) + '€', border: border, alignment: 'right', style: "tableContent" }],
+          // Comments about the Article 
+          [{ text: currentArticle['article']['description'], style: "articleComment" },
+          { colSpan: 5, text: '', style: "articleComment" }])
+      }
+      totalPrice += subprice ? subprice : 0;
+      // Section's Subprice
+      table.push(
+        [{ text: '', border: [false, true, false, false] },
+        { text: '', border: [false, true, false, false] },
+        { text: '', border: [false, true, false, false] },
+        { text: '', border: [false, true, false, false] },
+        { text: 'Sous-total', style: "tableContent", noWrap: true, alignment: 'right', border: [false, true, false, false], bold: true },
+        { text: this.formatNumber(subprice) + '€', style: "tableContent", alignment: 'right', border: [false, true, false, false] }])
+    }
+    // The four last rows
+    table.push([{ colSpan: 6, text: '\n' }],
+      [{ text: '' },
+      { text: '' },
+      { text: '' },
+      { text: '' },
+      { text: 'Total HTVA', style: "tableContent", alignment: 'right', border: [false, false, false, true], bold: true },
+      { text: this.formatNumber(totalPrice) + '€', style: "tableContent", alignment: 'right', border: [false, false, false, true] }],
+      [{ text: '' },
+      { text: '' },
+      { text: '' },
+      { text: '' },
+      { text: 'TVA ' + this.devisForm.value.tva.tva * 100 + '%', style: "tableContent", alignment: 'right', border: [false, false, false, true], bold: true },
+      { text: this.formatNumber(totalPrice * this.devisForm.value.tva.tva) + '€', style: "tableContent", alignment: 'right', border: [false, false, false, true] }],
+      [{ text: '' },
+      { text: '' },
+      { text: '' },
+      { text: '' },
+      { text: 'Total TVAC', style: "tableContent", alignment: 'right', noWrap: true, border: [false, false, false, true], bold: true },
+      { text: this.formatNumber(totalPrice * (1 + this.devisForm.value.tva.tva)) + '€', noWrap: true, style: "tableContent", alignment: 'right', border: [false, false, false, true] }])
+    return table
+  }
+
+  formatNumber(price: number) {
+    return price ? price.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/ /g, ' ') : '0,00';
+  }
+
   getFullDateFormatted(date: Date) {
     var result = '';
     if (date.getUTCDate() < 10) {
@@ -458,69 +534,6 @@ export class DevisComponent implements OnInit {
       };
       img.src = url;
     });
-  }
-
-  constructRowArticlesTable() {
-    var table: any;
-    var totalPrice = 0;
-    table = [
-      [{ text: 'Description', style: "headerTable", border: [false, false, false, true] },
-      { text: 'TM', style: "headerTable", border: [false, false, false, true] },
-      { text: 'Q', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
-      { text: 'U', style: "headerTable", alignment: 'right', border: [false, false, false, true] },
-      { text: 'PU', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
-      { text: 'Montant', style: "headerTable", alignment: 'center', border: [false, false, false, true] }]];
-    for (var section in this.devisForm.value['section']) {
-      var subprice = 0;
-      // Section 
-      table.push([{ colSpan: 6, text: this.devisForm.value['section'][section]['name'], style: "sectionHeader", border: [false, false, false, true] }])
-      for (var article in this.devisForm.value['section'][section]['articles']) {
-        var price = this.devisForm.value['section'][section]['articles'][article]['quantity'] * this.devisForm.value['section'][section]['articles'][article]['article']['price']
-        subprice += price
-        table.push(
-          // Article
-          [{ text: this.devisForm.value['section'][section]['articles'][article]['article']['label'], style: "articleLabel" },
-          { text: this.devisForm.value['section'][section]['articles'][article]['market_type'], style: "tableContent" },
-          { text: this.devisForm.value['section'][section]['articles'][article]['quantity'], style: "tableContent" },
-          { text: this.devisForm.value['section'][section]['articles'][article]['article']['unit'], style: "tableContent" },
-          { text: this.devisForm.value['section'][section]['articles'][article]['article']['price'] + "€", style: "tableContent" },
-          { text: price + '€', style: "tableContent" }],
-          // Comments about the Article 
-          [{ text: this.devisForm.value['section'][section]['articles'][article]['article']['description'], style: "articleComment" },
-          { colSpan: 5, text: '', style: "articleComment" }])
-      }
-      totalPrice += subprice;
-      // Section's Subprice
-      table.push(
-        [{ text: '', border: [false, true, false, false] },
-        { text: '', border: [false, true, false, false] },
-        { text: '', border: [false, true, false, false] },
-        { text: '', border: [false, true, false, false] },
-        { text: 'Sous-total', style: "tableContent", border: [false, true, false, false], bold: true },
-        { text: subprice + '€', style: "tableContent", border: [false, true, false, false] }])
-    }
-    // The four last rows
-    table.push([{ colSpan: 6, text: '\n' }],
-      [{ text: '' },
-      { text: '' },
-      { text: '' },
-      { text: '' },
-      { text: 'Total HTVA', style: "tableContent", border: [false, false, false, true], bold: true },
-      { text: totalPrice + '€', style: "tableContent", border: [false, false, false, true] }],
-      [{ text: '' },
-      { text: '' },
-      { text: '' },
-      { text: '' },
-      { text: 'TVA ' + this.devisForm.value.tva.tva + '%', style: "tableContent", border: [false, false, false, true], bold: true },
-      { text: totalPrice * this.devisForm.value.tva.tva + '€', style: "tableContent", border: [false, false, false, true] }],
-      [{ text: '' },
-      { text: '' },
-      { text: '' },
-      { text: '' },
-      { text: 'Total TVAC', style: "tableContent", border: [false, false, false, true], bold: true },
-      { text: totalPrice * (1 + this.devisForm.value.tva.tva) + '€', style: "tableContent", border: [false, false, false, true] }])
-    console.log(table)
-    return table
   }
 
   //AutoComplete functions
