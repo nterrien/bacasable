@@ -439,18 +439,18 @@ export class DevisComponent implements OnInit {
 
   private _filterArticle(value: string): Article[] {
     const filterValue = value.toLowerCase();
-    return this.articles.filter((article: Article) => accents.remove(article.label.toLowerCase()).indexOf(filterValue) != -1);
+    return this.articles.filter((article: Article) => accents.remove(article.label.toLowerCase()).indexOf(accents.remove(filterValue)) != -1);
   }
 
   private _filterCustomer(value: string): Customer[] {
     const filterValue = value.toLowerCase();
-    return this.customers.filter((customer: Customer) => accents.remove(customer.name.toLowerCase()).indexOf(filterValue) != -1);
+    return this.customers.filter((customer: Customer) => accents.remove(customer.name.toLowerCase()).indexOf(accents.remove(filterValue)) != -1);
   }
 
 
   private _filterSubmitGroup(value: any): any {
     const filterValue = value.toLowerCase();
-    return this.submitGroup.filter((submit_group: any) => accents.remove(submit_group.label.toLowerCase()).indexOf(filterValue) != -1);
+    return this.submitGroup.filter((submit_group: any) => accents.remove(submit_group.label.toLowerCase()).indexOf(accents.remove(filterValue)) != -1);
   }
 
   // Drag and Drop functions
