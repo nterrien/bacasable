@@ -20,7 +20,8 @@ import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+var pdfFonts = require("../../assets/fonts/vfs_fonts"); // To use Arial font
+// import pdfFonts from 'pdfmake/build/vfs_fonts'; // To use default font (Roboto1)
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -216,6 +217,14 @@ export class DevisComponent implements OnInit {
 
   generatePdf() {
     const documentDefinition = this.getDocumentDefinition();
+    pdfMake.fonts = {
+      Arial: {
+        normal: 'Arial.ttf',
+        bold: 'Arial_Bold.ttf',
+        italics: 'Arial_Italic.ttf',
+        bolditalics: 'Arial_Bold_Italic.ttf'
+      }
+    } // Comment to use default font Roboto
     pdfMake.createPdf(documentDefinition).open();
     //  pdfMake.createPdf(documentDefinition).print();
     //  pdfMake.createPdf(documentDefinition).download();
@@ -224,131 +233,167 @@ export class DevisComponent implements OnInit {
   getDocumentDefinition() {
     sessionStorage.setItem('devis', JSON.stringify(this.devisForm.value));
     return {
-      content: [{
-        table: {
-          body: [
-            [{
-              image: this.logo.__zone_symbol__value,
-              width: 49,
-              alignment: 'center'
-            }],
-            [{
-              text: "\n",
-              border: [false, false, false, true],
-            }],
-            [{
-              text: company_config.name,
-            }],
-            [{
-              text: company_config.street
-            }],
-            [{
-              text: company_config.city
-            }],
-            [{
-              text: company_config.country,
-            }],
-            [{
-              text: "Téléphone : " + company_config.phone,
-            }],
-            [{
-              text: 'Email : ' + company_config.mail,
-            }],
-            [{
-              text: 'Web : ' + company_config.website,
-              link: company_config.website,
-              border: [false, false, false, true],
-            }]
-          ]
+      content: [
+        { // Test
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: this.constructRowArticlesTable()
+          }
+        },// Fin Test
+        {
+          table: {
+            body: [
+              [{
+                image: this.logo.__zone_symbol__value,
+                width: 49,
+                alignment: 'center'
+              }],
+              [{
+                text: "\n",
+                border: [false, false, false, true],
+              }],
+              [{
+                text: company_config.name,
+              }],
+              [{
+                text: company_config.street
+              }],
+              [{
+                text: company_config.city
+              }],
+              [{
+                text: company_config.country,
+              }],
+              [{
+                text: "Téléphone : " + company_config.phone,
+              }],
+              [{
+                text: 'Email : ' + company_config.mail,
+              }],
+              [{
+                text: 'Web : ' + company_config.website,
+                link: company_config.website,
+                border: [false, false, false, true],
+              }]
+            ]
+          },
+          layout: {
+            defaultBorder: false,
+          },
         },
-        layout: {
-          defaultBorder: false,
+        {
+          columns: [
+            [
+              {
+                text: this.devisForm.value.client.name,
+                style: 'client'
+              },
+              {
+                text: this.devisForm.value.client.address,
+                style: 'client'
+              },
+              {
+                text: this.devisForm.value.client.id_city, //TODo 
+                style: 'client'
+              },
+              {
+                text: "Reference : ", //Find what it is
+                style: 'metaQuote'
+              },
+              {
+                text: "Date du devis : " + this.getFullDateFormatted(new Date(Date.now())), //Find what it is
+                style: 'metaQuote'
+              },
+              {
+                text: "Version : ", //Find what it is
+                style: 'metaQuote'
+              },
+              {
+                text: this.devisForm.value.tva.label,
+                style: 'metaQuote'
+              },
+              {
+                text: "Titre : ", //Find what it is
+                style: 'metaQuote'
+              },
+              { text: "\n" }]]
         },
-      },
-      {
-        columns: [
-          [
-            {
-              text: this.devisForm.value.client.name,
-              style: 'client'
-            },
-            {
-              text: this.devisForm.value.client.address,
-              style: 'client'
-            },
-            {
-              text: this.devisForm.value.client.id_city, //TODo 
-              style: 'client'
-            },
-            {
-              text: "Reference : ", //Find what it is
-              style: 'metaQuote'
-            },
-            {
-              text: "Date du devis : " + this.getFullDateFormatted(new Date(Date.now())), //Find what it is
-              style: 'metaQuote'
-            },
-            {
-              text: "Version : ", //Find what it is
-              style: 'metaQuote'
-            },
-            {
-              text: this.devisForm.value.tva.label,
-              style: 'metaQuote'
-            },
-            {
-              text: "Titre : ", //Find what it is
-              style: 'metaQuote'
-            },
-            { text: "\n" }]]
-      },
-      {
-        table: {
-          // headers are automatically repeated if the table spans over multiple pages
-          // you can declare how many rows should be treated as headers
-          headerRows: 1,
-          widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'], // façon de faire logique
-          // widths: [254, 27, 27, 29, 39, 59], //Façon de faire si on essaie de ressembler au maximum a la google sheets
-          body: [
-            [{ text: 'Description', style: "headerTable", border: [false, false, false, true] },
-            { text: 'TM', style: "headerTable", border: [false, false, false, true] },
-            { text: 'Q', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
-            { text: 'U', style: "headerTable", alignment: 'right', border: [false, false, false, true] },
-            { text: 'PU', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
-            { text: 'Montant', style: "headerTable", alignment: 'center', border: [false, false, false, true] }],
-            // a SUPPRIMER C'EST POUR TESTER, LE VRAI TRUC SERA AUTOMATISER
-            //Section
-            [{ colSpan: 6, text: 'INSTALLATION DE CHANTIER', style: "sectionHeader", border: [false, false, false, true] }],
-            //Article
-            [{ text: 'INSTALLATION DE CHANTIER', style: "articleLabel" },
-            { text: 'QF', style: "tableContent" },
-            { text: '1,0', style: "tableContent" },
-            { text: 'fft', style: "tableContent" },
-            { text: '2 660,00€', style: "tableContent" },
-            { text: '2 660,00€', style: "tableContent" }],
-            //Commentaire d'article
-            [{ text: '- truc \n- machin', style: "articleComment" },
-            { text: '', style: "articleComment" },
-            { text: '', style: "articleComment" },
-            { text: '', style: "articleComment" },
-            { text: '', style: "articleComment" },
-            { text: '', style: "articleComment" }],
-            //Dernier ligne de la section
-            [{ text: '', border: [false, true, false, false] },
-            { text: '', border: [false, true, false, false] },
-            { text: '', border: [false, true, false, false] },
-            { text: '', border: [false, true, false, false] },
-            { text: 'Sous-total', style: "tableContent", border: [false, true, false, false], bold: true },
-            { text: '2 660,00€', style: "tableContent", border: [false, true, false, false] }]
-          ]
+        {
+          table: {
+            // headers are automatically repeated if the table spans over multiple pages
+            // you can declare how many rows should be treated as headers
+            headerRows: 1,
+            widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto'], // façon de faire logique
+            // widths: [254, 27, 27, 29, 39, 59], //Façon de faire si on essaie de ressembler au maximum a la google sheets
+            body: this.constructRowArticlesTable()
+          },
+          layout: {
+            defaultBorder: false,
+            // Add the dashed border line
+            // TODO
+            // hLineStyle: function (i, node) {
+            //   if (node.table.body[i] && i != 0 && node.table.body[i][1]['text'] != undefined && node.table.body[i][2]['text'] != undefined && node.table.body[i][3]['text'] != undefined && node.table.body[i][4]['text'] != undefined && node.table.body[i][5]['text'] != undefined) {
+            //     return { dash: { length: 2, space: 2 } };
+            //   }
+            //   return null;
+            //},
+          },
         },
-        layout: {
-          defaultBorder: false,
+        {
+          //What is written here does not change i think.
+          table: {
+            widths: ['auto'],
+            body: [
+              [{ text: '\n', style: 'headerTable' }],
+              [{ text: 'Conditions de chantier:', style: 'headerTable' }],
+              [{ text: "- Fourniture de l'eau et de l'électricité sur chantier à charge du propriétaire", style: 'tableContent' }],
+              [{ text: "- Le raccordement à l'égout n'est pas inclus", style: 'tableContent' }],
+              [{ text: "\n", style: 'tableContent' }],
+              [{ text: "Conditions de paiement :", style: 'tableContent', fontSize: 10, }],
+              [{ text: "15% d’acompte à la signature du contrat", style: 'tableContent' }],
+              [{ text: "25% du montant total des travaux au début des travaux", style: 'tableContent' }],
+              [{ text: "55% du montant de chaque poste à la clôture de chacun de ces postes", style: 'tableContent' }],
+              [{ text: "sauf châssis et ossature CLT payé à la signature des plans de fabrication", style: 'tableContent' }],
+              [{ text: "Solde à la réception des travaux", style: 'tableContent' }],
+              [{ text: "\n", style: 'tableContent' }],
+              [{ text: "Moyen de paiement : Virement bancaire", style: 'headerTable', border: [false, true, false, false] }],
+              [{ text: "\n", style: 'tableContent' }],
+              [{ text: "La signature du devis implique l'acceptation des conditions générales de ventes", border: [false, true, false, false], style: 'tableContent' }],
+              [{ text: "\n", style: 'tableContent' }]
+            ]
+          },
+          layout: {
+            defaultBorder: false,
+            // Add the dashed border line
+            hLineStyle: function (i, node) {
+              return { dash: { length: 2, space: 2 } };
+            }
+          }
         },
-      }],
+        {
+          //What is written here does not change i think.
+          table: {
+            headerRows: 1,
+            widths: ['*'],
+            body: [
+              [{ text: 'BON DE COMMANDE', style: 'headerTable', alignment: 'center' }],
+              [{ text: "Nom :", style: 'tableContent' }],
+              [{ text: "Prénom :", style: 'tableContent' }],
+              [{ text: "Tel/GSM du contact :", style: 'tableContent' }],
+              [{ text: "Adresse email du contact :", style: 'tableContent' }],
+              [{ text: "Société :", style: 'tableContent' }],
+              [{ text: "Numéro de TVA :", style: 'tableContent' }],
+              [{ text: "Adresse de facturation :", style: 'tableContent' }],
+              [{ text: "Adresse du chantier (si différente) :", style: 'tableContent' }],
+              [{
+                text: "Date et signature :\n\n(Merci de parapher toutes les pages du devis, y compris les conditions générales)", style: 'tableContent'
+              }]]
+          }
+        }],
       defaultStyle: {
-        fontSize: 11
-        //font : 'Arial' // but i have to find it first
+        fontSize: 11,
+        font: 'Arial' // Comment to use default font (Roboto)
       },
       styles: {
         client: {
@@ -379,8 +424,7 @@ export class DevisComponent implements OnInit {
         articleComment: {
           fontSize: 9,
           color: '#666666',
-        },
-        //dans la table du 9 sauf pour le nom de l'article
+        }
       }
     };
   }
@@ -421,6 +465,69 @@ export class DevisComponent implements OnInit {
       };
       img.src = url;
     });
+  }
+
+  constructRowArticlesTable() {
+    var table: any;
+    var totalPrice = 0;
+    table = [
+      [{ text: 'Description', style: "headerTable", border: [false, false, false, true] },
+      { text: 'TM', style: "headerTable", border: [false, false, false, true] },
+      { text: 'Q', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
+      { text: 'U', style: "headerTable", alignment: 'right', border: [false, false, false, true] },
+      { text: 'PU', style: "headerTable", alignment: 'center', border: [false, false, false, true] },
+      { text: 'Montant', style: "headerTable", alignment: 'center', border: [false, false, false, true] }]];
+    for (var section in this.devisForm.value['section']) {
+      var subprice = 0;
+      // Section 
+      table.push([{ colSpan: 6, text: this.devisForm.value['section'][section]['name'], style: "sectionHeader", border: [false, false, false, true] }])
+      for (var article in this.devisForm.value['section'][section]['articles']) {
+        var price = this.devisForm.value['section'][section]['articles'][article]['quantity'] * this.devisForm.value['section'][section]['articles'][article]['article']['price']
+        subprice += price
+        table.push(
+          // Article
+          [{ text: this.devisForm.value['section'][section]['articles'][article]['article']['label'], style: "articleLabel" },
+          { text: this.devisForm.value['section'][section]['articles'][article]['market_type'], style: "tableContent" },
+          { text: this.devisForm.value['section'][section]['articles'][article]['quantity'], style: "tableContent" },
+          { text: this.devisForm.value['section'][section]['articles'][article]['article']['unit'], style: "tableContent" },
+          { text: this.devisForm.value['section'][section]['articles'][article]['article']['price'] + "€", style: "tableContent" },
+          { text: price + '€', style: "tableContent" }],
+          // Comments about the Article 
+          [{ text: this.devisForm.value['section'][section]['articles'][article]['article']['description'], style: "articleComment" },
+          { colSpan: 5, text: '', style: "articleComment" }])
+      }
+      totalPrice += subprice;
+      // Section's Subprice
+      table.push(
+        [{ text: '', border: [false, true, false, false] },
+        { text: '', border: [false, true, false, false] },
+        { text: '', border: [false, true, false, false] },
+        { text: '', border: [false, true, false, false] },
+        { text: 'Sous-total', style: "tableContent", border: [false, true, false, false], bold: true },
+        { text: subprice + '€', style: "tableContent", border: [false, true, false, false] }])
+    }
+    // The four last rows
+    table.push([{ colSpan: 6, text: '\n' }],
+      [{ text: '' },
+      { text: '' },
+      { text: '' },
+      { text: '' },
+      { text: 'Total HTVA', style: "tableContent", border: [false, false, false, true], bold: true },
+      { text: totalPrice + '€', style: "tableContent", border: [false, false, false, true] }],
+      [{ text: '' },
+      { text: '' },
+      { text: '' },
+      { text: '' },
+      { text: 'TVA ' + this.devisForm.value.tva.tva + '%', style: "tableContent", border: [false, false, false, true], bold: true },
+      { text: totalPrice * this.devisForm.value.tva.tva + '€', style: "tableContent", border: [false, false, false, true] }],
+      [{ text: '' },
+      { text: '' },
+      { text: '' },
+      { text: '' },
+      { text: 'Total TVAC', style: "tableContent", border: [false, false, false, true], bold: true },
+      { text: totalPrice * (1 + this.devisForm.value.tva.tva) + '€', style: "tableContent", border: [false, false, false, true] }])
+    console.log(table)
+    return table
   }
 
   //AutoComplete functions
