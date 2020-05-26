@@ -29,6 +29,7 @@ db.volume = require("./volume.js")(sequelize, Sequelize);
 
 db.customer = require("./customer.js")(sequelize, Sequelize);
 db.market_type = require("./market_type.js")(sequelize, Sequelize);
+db.city = require("./city.js")(sequelize, Sequelize);
 
 
 // article's associations

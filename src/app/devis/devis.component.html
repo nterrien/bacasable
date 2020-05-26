@@ -18,12 +18,24 @@
         <br>
         <br>
         <mat-form-field appearance="fill">
+            <mat-label for="reference">Référence</mat-label>
+            <input matInput type="text" id="reference" formControlName="reference">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
             <mat-label for="tva">Régime TVA</mat-label>
             <mat-select formControlName="tva">
                 <mat-option *ngFor="let tva of TVAList" [value]="tva">
                     {{tva.label}}
                 </mat-option>
             </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label for="version">Version</mat-label>
+            <input matInput type="text" id="version" formControlName="version">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label for="titre">Titre</mat-label>
+            <input matInput type="text" id="titre" formControlName="titre">
         </mat-form-field>
         <br>
         <br>

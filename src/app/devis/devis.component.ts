@@ -20,6 +20,7 @@ import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
 import pdfMake from 'pdfmake/build/pdfmake';
+import { CityService } from '../services/city.service';
 var pdfFonts = require("../../assets/fonts/vfs_fonts"); // To use Arial font
 // import pdfFonts from 'pdfmake/build/vfs_fonts'; // To use default font (Roboto1)
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -42,6 +43,8 @@ export class DevisComponent implements OnInit {
   marketType: any;
   TVAList: any[];
   submitGroup: any;
+  // Right now there is no cities in the database so i do not know if it works
+  cities: any;
 
   // Used for autocompletion
   filteredArticlesInSection: Observable<Article[]>[][];
@@ -63,12 +66,15 @@ export class DevisComponent implements OnInit {
     private elRef: ElementRef,
     private marketTypeService: MarketTypeService,
     private submitGroupService: SubmitGroupService,
+    private cityService: CityService,
   ) { }
 
   ngOnInit(): void {
+    // Maybe we should await between each call to database to be sure to have no bug.
     this.getSubmitGroups();
     this.getArticles();
     this.getCustomers();
+    this.getCities();
     this.getMarketTypes();
     this.logo = this.getBase64ImageFromURL(company_config.logo);
     this.TVAList = [{ 'label': "Régime TVA : Nouvelle construction (21%)", 'tva': 0.21 },
@@ -85,7 +91,10 @@ export class DevisComponent implements OnInit {
       // name: ['ICO Ingénieurie & Construction', Validators.required], 
       client: ['', Validators.required],
       section: this.formBuilder.array([]),
+      reference: ['', Validators.required],
+      version: [1, [Validators.required, Validators.pattern(/^[0-9]$/)]],
       tva: [this.TVAList[0], Validators.required],
+      titre: ['', Validators.required],
     });
   }
 
@@ -289,11 +298,11 @@ export class DevisComponent implements OnInit {
                 style: 'client'
               },
               {
-                text: this.devisForm.value.client.id_city, //TODo 
+                text: this.devisForm.value.client.id_city ? this.cities.filter(myObj => myObj.id == this.devisForm.value.client.id_city).name_city : '\n', //TODo 
                 style: 'client'
               },
               {
-                text: "Reference : ", //Find what it is
+                text: "Reference : " + this.devisForm.value.reference, //Find what it is
                 style: 'metaQuote'
               },
               {
@@ -301,7 +310,7 @@ export class DevisComponent implements OnInit {
                 style: 'metaQuote'
               },
               {
-                text: "Version : ", //Find what it is
+                text: "Version : " + this.devisForm.value.version, //Find what it is
                 style: 'metaQuote'
               },
               {
@@ -309,7 +318,7 @@ export class DevisComponent implements OnInit {
                 style: 'metaQuote'
               },
               {
-                text: "Titre : ", //Find what it is
+                text: "Titre : " + this.devisForm.value.titre, //Find what it is
                 style: 'metaQuote'
               },
               { text: "\n" }]]
@@ -666,6 +675,18 @@ export class DevisComponent implements OnInit {
       .subscribe(
         data => {
           this.submitGroup = data;
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+
+  getCities() {
+    this.cityService.getAll()
+      .subscribe(
+        data => {
+          this.cities = data;
         },
         error => {
           console.log(error);
