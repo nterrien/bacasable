@@ -71,7 +71,6 @@ export class DevisComponent implements OnInit {
 
   ngOnInit(): void {
     // Maybe we should await between each call to database to be sure to have no bug.
-    this.getSubmitGroups();
     this.getArticles();
     this.getCustomers();
     this.getCities();
@@ -580,7 +579,7 @@ export class DevisComponent implements OnInit {
   //// Section
 
   dropSection(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.devisForm.value["section"], event.previousIndex, event.currentIndex);
+    moveItemInArray(this.getSectionInDevis().value, event.previousIndex, event.currentIndex);
     moveItemInArray(this.getSectionInDevis().controls, event.previousIndex, event.currentIndex);
     moveItemInArray(this.filteredArticlesInSection, event.previousIndex, event.currentIndex);
     moveItemInArray(this.filteredSubmitGroupInSection, event.previousIndex, event.currentIndex);
@@ -589,7 +588,7 @@ export class DevisComponent implements OnInit {
   //// Articles
   dropArticle(event: CdkDragDrop<string[]>, ix: number) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(this.devisForm.value['section'][ix]['articles'], event.previousIndex, event.currentIndex);
+      moveItemInArray(this.getArticlesInSection(ix).value, event.previousIndex, event.currentIndex);
       moveItemInArray(this.getArticlesInSection(ix).controls, event.previousIndex, event.currentIndex);
       moveItemInArray(this.filteredArticlesInSection[ix], event.previousIndex, event.currentIndex);
       moveItemInArray(this.filteredSubmitGroupInSection[ix], event.previousIndex, event.currentIndex);
@@ -597,14 +596,9 @@ export class DevisComponent implements OnInit {
     } else {
       const currentSectionIndex = Number(event.container.data);
       const previousSectionIndex = Number(event.previousContainer.data);
-      transferArrayItem(this.devisForm.value['section'][previousSectionIndex]['articles'],
-        this.devisForm.value['section'][currentSectionIndex]['articles'],
-        event.previousIndex,
-        event.currentIndex);
-      transferArrayItem(this.getArticlesInSection(previousSectionIndex).controls,
-        this.getArticlesInSection(currentSectionIndex).controls,
-        event.previousIndex,
-        event.currentIndex);
+      var movedItem = this.getArticlesInSection(previousSectionIndex).at(event.previousIndex);
+      this.getArticlesInSection(previousSectionIndex).removeAt(event.previousIndex);
+      this.getArticlesInSection(currentSectionIndex).insert(event.currentIndex, movedItem);
       transferArrayItem(this.filteredArticlesInSection[previousSectionIndex],
         this.filteredArticlesInSection[currentSectionIndex],
         event.previousIndex,
@@ -629,12 +623,7 @@ export class DevisComponent implements OnInit {
           this.articles = data;
           // Used in dev, should be removed
           // console.log(data);
-
-          // Je devrais surement pas fiare comme ça, 
-          //mais j'aimerai bien ajouter une section une fois que
-          // les articles on été recuperer maisj e sais pas comment fiare
-          //poru attendre que la focntion ait ifini autrement uqe comme ça 
-          this.addSection();
+          this.getSubmitGroups();
         },
         error => {
           console.log(error);
@@ -675,6 +664,11 @@ export class DevisComponent implements OnInit {
       .subscribe(
         data => {
           this.submitGroup = data;
+          // Je devrais surement pas fiare comme ça, 
+          //mais j'aimerai bien ajouter une section une fois que
+          // les articles on été recuperer maisj e sais pas comment fiare
+          //poru attendre que la focntion ait ifini autrement uqe comme ça 
+          this.addSection();
         },
         error => {
           console.log(error);
