@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ArticleService } from '../services/article.service';
 import { Observable } from 'rxjs';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { Article } from '../models/article.model';
 import { Customer } from '../models/customer.model';
@@ -90,7 +90,7 @@ export class DevisComponent implements OnInit {
       // name: ['ICO Ingénieurie & Construction', Validators.required], 
       client: ['', Validators.required],
       section: this.formBuilder.array([]),
-      reference: ['', Validators.required],
+      reference: ['P-', Validators.required],
       version: [1, [Validators.required, Validators.pattern(/^[0-9]$/)]],
       tva: [this.TVAList[0], Validators.required],
       titre: ['', Validators.required],
@@ -232,7 +232,7 @@ export class DevisComponent implements OnInit {
   onSubmitForm() {
     // TODO
     // Save Form here
-    console.log(this.devisForm.value);
+    console.log(this.devisForm);
   }
 
   newVersion() {

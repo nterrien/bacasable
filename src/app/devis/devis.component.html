@@ -13,6 +13,9 @@
                     {{customer.name}}
                 </mat-option>
             </mat-autocomplete>
+            <mat-error *ngIf="this.devisForm.controls.client.hasError('required')">
+                Un client doit être sélectionné.
+            </mat-error>
         </mat-form-field>
         <button type="button" class="btn btn-success" (click)="onAddCustomer()"> Ajouter un nouveau client</button>
         <br>
@@ -20,6 +23,9 @@
         <mat-form-field appearance="fill">
             <mat-label for="reference">Référence</mat-label>
             <input matInput type="text" id="reference" formControlName="reference">
+            <mat-error *ngIf="this.devisForm.controls.reference.hasError('required')">
+                Il doit y avoir une référence
+            </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label for="tva">Régime TVA</mat-label>
@@ -32,6 +38,13 @@
         <mat-form-field appearance="fill">
             <mat-label for="version">Version</mat-label>
             <input matInput type="text" id="version" formControlName="version">
+            <mat-error
+                *ngIf="this.devisForm.controls.version.hasError('pattern') && !this.devisForm.controls.version.hasError('required')">
+                La version doit être un nombre entier positif
+            </mat-error>
+            <mat-error *ngIf="this.devisForm.controls.version.hasError('required')">
+                Il doit y avoir un numéro de version
+            </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label for="titre">Titre</mat-label>
@@ -66,6 +79,10 @@
                             <mat-label for="name">Nom de la section</mat-label>
                             <input matInput type="text" title="{{devisForm.value['section'][ix].name}}"
                                 formControlName="name">
+                            <mat-error
+                                *ngIf="this.getSectionInDevis()['controls'][0]['controls']['name'].hasError('required') ">
+                                Un nom de section ne peux pas être vide.
+                            </mat-error>
                         </mat-form-field>
                     </span>
                     <!-- Article -->
@@ -93,6 +110,9 @@
                                                 {{article.label}}
                                             </mat-option>
                                         </mat-autocomplete>
+                                        <mat-error *ngIf="this.getArticlesInSection(iy)['controls'][iy]['controls']['article'].hasError('required')">
+                                            Un article doit être sélectionné
+                                        </mat-error>
                                     </mat-form-field>
                                 </span>
                                 <mat-form-field class='col-sm-1' appearance="fill">
@@ -102,6 +122,9 @@
                                             {{MT.acronym}}
                                         </mat-option>
                                     </mat-select>
+                                    <mat-error *ngIf="this.getArticlesInSection(iy)['controls'][iy]['controls']['market_type'].hasError('required')">
+                                        Ne peux être vide
+                                    </mat-error>
                                 </mat-form-field>
                                 <mat-form-field class='col-sm-1' appearance="fill">
                                     <mat-label for="quantity">Quantité</mat-label>
