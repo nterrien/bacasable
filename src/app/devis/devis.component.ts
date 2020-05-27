@@ -121,6 +121,7 @@ export class DevisComponent implements OnInit {
 
     return this.formBuilder.group({
       // This ID is used to allow drag n drop between two different lists
+      // It does not have to be registered in the database, and would probably be useless in the database
       'id': this.numberOfSection,
       'name': ['', [Validators.required]],
       'articles': this.formBuilder.array([
@@ -247,14 +248,21 @@ export class DevisComponent implements OnInit {
         bolditalics: 'Arial_Bold_Italic.ttf'
       }
     } // Comment to use default font Roboto
+    // Choose between open and download
     pdfMake.createPdf(documentDefinition).open();
-    //  pdfMake.createPdf(documentDefinition).print();
-    //  pdfMake.createPdf(documentDefinition).download();
+    // pdfMake.createPdf(documentDefinition).download('Devis-' + this.devisForm.value['reference'] +"-" +this.devisForm.value['client'].name + '-V'+ this.devisForm.value['version']);
   }
 
   getDocumentDefinition() {
     sessionStorage.setItem('devis', JSON.stringify(this.devisForm.value));
     return {
+      info: {
+        // TODO
+        title: 'Devis-' + this.devisForm.value['reference'] +"-" +this.devisForm.value['client'].name + '-V'+ this.devisForm.value['version'] ,
+        author: 'ICO Ingénierie & Construction',
+        subject: 'Devis',
+        creator: 'ICO Ingénierie & Construction'
+      },
       content: [
         {
           table: {
@@ -387,7 +395,7 @@ export class DevisComponent implements OnInit {
         {
           //What is written here does not change i think.
           table: {
-            headerRows: 1,
+            headerRows: 0,
             widths: ['*'],
             body: [
               [{ text: 'BON DE COMMANDE', style: 'headerTable', alignment: 'center' }],
