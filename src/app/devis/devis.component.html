@@ -13,7 +13,8 @@
                     {{customer.name}}
                 </mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="this.devisForm.controls.client.hasError('required')">
+            <mat-error
+                *ngIf="this.devisForm.controls.client.hasError('required') || this.devisForm.controls.client.hasError('nothingSelected')">
                 Un client doit être sélectionné.
             </mat-error>
         </mat-form-field>
@@ -24,7 +25,7 @@
             <mat-label for="reference">Référence</mat-label>
             <input matInput type="text" id="reference" formControlName="reference">
             <mat-error *ngIf="this.devisForm.controls.reference.hasError('required')">
-                Il doit y avoir une référence
+                Il doit y avoir une référence.
             </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -40,10 +41,10 @@
             <input matInput type="text" id="version" formControlName="version">
             <mat-error
                 *ngIf="this.devisForm.controls.version.hasError('pattern') && !this.devisForm.controls.version.hasError('required')">
-                La version doit être un nombre entier positif
+                La version doit être un nombre entier positif.
             </mat-error>
             <mat-error *ngIf="this.devisForm.controls.version.hasError('required')">
-                Il doit y avoir un numéro de version
+                Il doit y avoir un numéro de version.
             </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -80,7 +81,7 @@
                             <input matInput type="text" title="{{devisForm.value['section'][ix].name}}"
                                 formControlName="name">
                             <mat-error
-                                *ngIf="this.getSectionInDevis()['controls'][0]['controls']['name'].hasError('required') ">
+                                *ngIf="this.getSectionInDevis()['controls'][0]['controls']['name'].hasError('required') || this.getSectionInDevis()['controls'][0]['controls']['name'].hasError('whitespace') ">
                                 Un nom de section ne peux pas être vide.
                             </mat-error>
                         </mat-form-field>
@@ -110,8 +111,9 @@
                                                 {{article.label}}
                                             </mat-option>
                                         </mat-autocomplete>
-                                        <mat-error *ngIf="this.getArticlesInSection(iy)['controls'][iy]['controls']['article'].hasError('required')">
-                                            Un article doit être sélectionné
+                                        <mat-error
+                                            *ngIf="this.getArticlesInSection(iy)['controls'][iy]['controls']['article'].hasError('required') || this.getArticlesInSection(iy)['controls'][iy]['controls']['article'].hasError('nothingSelected') ">
+                                            Un article doit être sélectionné.
                                         </mat-error>
                                     </mat-form-field>
                                 </span>
@@ -122,8 +124,9 @@
                                             {{MT.acronym}}
                                         </mat-option>
                                     </mat-select>
-                                    <mat-error *ngIf="this.getArticlesInSection(iy)['controls'][iy]['controls']['market_type'].hasError('required')">
-                                        Ne peux être vide
+                                    <mat-error
+                                        *ngIf="this.getArticlesInSection(iy)['controls'][iy]['controls']['market_type'].hasError('required')">
+                                        Ne peux être vide.
                                     </mat-error>
                                 </mat-form-field>
                                 <mat-form-field class='col-sm-1' appearance="fill">

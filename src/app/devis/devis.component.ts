@@ -88,7 +88,7 @@ export class DevisComponent implements OnInit {
     this.filteredSubmitGroupInSection = [];
     this.devisForm = this.formBuilder.group({
       // name: ['ICO Ingénieurie & Construction', Validators.required], 
-      client: ['', Validators.required],
+      client: ['', [Validators.required, this.selectedValidator]],
       section: this.formBuilder.array([]),
       reference: ['P-', Validators.required],
       version: [1, [Validators.required, Validators.pattern(/^[0-9]$/)]],
@@ -123,7 +123,7 @@ export class DevisComponent implements OnInit {
       // This ID is used to allow drag n drop between two different lists
       // It does not have to be registered in the database, and would probably be useless in the database
       'id': this.numberOfSection,
-      'name': ['', [Validators.required]],
+      'name': ['', [Validators.required, this.noWhitespaceValidator]],
       'articles': this.formBuilder.array([
         newArticleControl
       ])
@@ -132,7 +132,7 @@ export class DevisComponent implements OnInit {
 
   initArticles() {
     return this.formBuilder.group({
-      'article': ['', [Validators.required]],
+      'article': ['', [Validators.required, this.selectedValidator]],
       'market_type': ['', [Validators.required]],
       'quantity': [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{0,2})?$/)]],
       'submit_group': [''],
@@ -243,6 +243,17 @@ export class DevisComponent implements OnInit {
   }
 
 
+  // Custom Validators 
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
+  }
+
+
+  public selectedValidator(control: FormControl) {
+    return control.value.id ? null : { 'nothingSelected': true };
+  }
 
   // PDF
 
