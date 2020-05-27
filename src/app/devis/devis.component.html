@@ -78,7 +78,7 @@
                                 <span class=col-sm-5>
                                     <span class="example-handle col-sm-1" cdkDragHandle>
                                         <mat-icon>open_with</mat-icon>
-                                        <mat-icon class="delete-button" (click)="deleteArticle(ix,iy)" >delete</mat-icon>
+                                        <mat-icon class="delete-button" (click)="deleteArticle(ix,iy)">delete</mat-icon>
                                     </span>
                                     <mat-form-field class='col-sm-11' appearance="fill">
                                         <mat-label for="name">Nom de l'article</mat-label>
@@ -193,7 +193,9 @@
             <button type="button" class="btn btn-success" (click)="addSection()" [disabled]="articles==null">Ajouter
                 une section</button>
         </div>
-        <button type="submit" class="btn btn-primary">Soumettre</button>
-        <button class="btn btn-primary" (click)="generatePdf()">Open PDF</button>
+        <br>
+        <button type="submit" class="btn btn-primary">Sauvegarder TODO</button>
+        <button class="btn btn-primary" (click)='newVersion()'>Nouvelle Version TODO</button>
+        <button class="btn btn-primary" (click)="generatePdf()">Ouvrir en PDF</button>
     </form>
 </div>

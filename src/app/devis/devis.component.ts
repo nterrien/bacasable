@@ -231,7 +231,15 @@ export class DevisComponent implements OnInit {
 
   onSubmitForm() {
     // TODO
+    // Save Form here
     console.log(this.devisForm.value);
+  }
+
+  newVersion() {
+    //TODO
+    this.onSubmitForm();
+    // Open new quote with  the same data as in this one and :
+    this.devisForm.value['version'] + 1
   }
 
 
@@ -258,7 +266,7 @@ export class DevisComponent implements OnInit {
     return {
       info: {
         // TODO
-        title: 'Devis-' + this.devisForm.value['reference'] +"-" +this.devisForm.value['client'].name + '-V'+ this.devisForm.value['version'] ,
+        title: 'Devis-' + this.devisForm.value['reference'] + "-" + this.devisForm.value['client'].name + '-V' + this.devisForm.value['version'],
         author: 'ICO Ingénierie & Construction',
         subject: 'Devis',
         creator: 'ICO Ingénierie & Construction'
