@@ -232,7 +232,7 @@ export class DevisComponent implements OnInit {
   onSubmitForm() {
     // TODO
     // Save Form here
-    console.log(this.devisForm);
+    console.log(this.devisForm.value);
   }
 
   newVersion() {
