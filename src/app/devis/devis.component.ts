@@ -216,6 +216,16 @@ export class DevisComponent implements OnInit {
     return price;
   }
 
+  deleteSection(ix: number) {
+    //TODO
+    console.log("TODO : Section", ix)
+  }
+
+  deleteArticle(ix: number, iy: number) {
+    //TODO
+    console.log("TODO : Article", ix, iy)
+  }
+
   onSubmitForm() {
     // TODO
     console.log(this.devisForm.value);
