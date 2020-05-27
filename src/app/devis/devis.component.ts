@@ -161,7 +161,7 @@ export class DevisComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterSubmitGroup(label) : this.submitGroup.slice()));
     // Used to update submit group when an article is selected
-    // Unsubscribe this if we do a delete article feature
+    // Maybe we should Unsubscribe this in the delete article feature
     newArticleControl.controls['article'].valueChanges.subscribe(
       val => val.id_submit ? newArticleControl.patchValue({ 'submit_group': this.submitGroup.find(myObj => myObj.id == val.id_submit) }) : '');
   }
@@ -217,13 +217,15 @@ export class DevisComponent implements OnInit {
   }
 
   deleteSection(ix: number) {
-    //TODO
-    console.log("TODO : Section", ix)
+    this.getSectionInDevis().removeAt(ix)
+    this.filteredArticlesInSection.splice(ix, 1);
+    this.filteredSubmitGroupInSection.splice(ix, 1);
   }
 
   deleteArticle(ix: number, iy: number) {
-    //TODO
-    console.log("TODO : Article", ix, iy)
+    this.getArticlesInSection(ix).removeAt(iy)
+    this.filteredArticlesInSection[ix].splice(iy, 1);
+    this.filteredSubmitGroupInSection[ix].splice(iy, 1);
   }
 
   onSubmitForm() {
