@@ -112,7 +112,7 @@
                                             </mat-option>
                                         </mat-autocomplete>
                                         <mat-error
-                                            *ngIf="this.getArticlesInSection(ix)['controls'][iy]['controls']['article'].hasError('required') || this.getArticlesInSection(iy)['controls'][iy]['controls']['article'].hasError('nothingSelected') ">
+                                            *ngIf="this.getArticlesInSection(ix)['controls'][iy]['controls']['article'].hasError('required') || this.getArticlesInSection(ix)['controls'][iy]['controls']['article'].hasError('nothingSelected') ">
                                             Un article doit être sélectionné.
                                         </mat-error>
                                     </mat-form-field>
