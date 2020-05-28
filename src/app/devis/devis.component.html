@@ -222,6 +222,6 @@
         <br>
         <button type="submit" class="btn btn-primary">Sauvegarder TODO</button>
         <button class="btn btn-primary" (click)='newVersion()'>Nouvelle Version TODO</button>
-        <button class="btn btn-primary" (click)="generatePdf()">Ouvrir en PDF</button>
+        <button class="btn btn-primary" [disabled]="!devisForm.valid" (click)="generatePdf()">Ouvrir en PDF</button>
     </form>
 </div>
