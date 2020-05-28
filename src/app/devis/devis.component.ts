@@ -115,7 +115,7 @@ export class DevisComponent implements OnInit {
         map(value => typeof value === 'string' ? value : value.label),
         map(label => label ? this._filterSubmitGroup(label) : this.submitGroup.slice()));
     // Used to update submit group when an article is selected
-    // Unsubscribe this if we do a delete article feature
+    // Maybe we should Unsubscribe this in the delete article feature
     newArticleControl.controls['article'].valueChanges.subscribe(
       val => val.id_submit ? newArticleControl.patchValue({ 'submit_group': this.submitGroup.find(myObj => myObj.id == val.id_submit) }) : '');
 
@@ -249,7 +249,6 @@ export class DevisComponent implements OnInit {
     const isValid = !isWhitespace;
     return isValid ? null : { 'whitespace': true };
   }
-
 
   public selectedValidator(control: FormControl) {
     return control.value.id ? null : { 'nothingSelected': true };
@@ -490,33 +489,37 @@ export class DevisComponent implements OnInit {
     for (var section in this.devisForm.value['section']) {
       var subprice = 0;
       // Section 
-      table.push([{ colSpan: 6, text: this.devisForm.value['section'][section]['name'], style: "sectionHeader", border: [false, false, false, true] }])
-      for (var article in this.devisForm.value['section'][section]['articles']) {
-        const currentArticle = this.devisForm.value['section'][section]['articles'][article];
-        var price = currentArticle['quantity'] * currentArticle['article']['price']
-        subprice += price ? price : 0;
-        const border = [false, true, false, false];
+      // This condition allow to remove empty Section without annoying the user with a Validator
+      if (this.devisForm.value['section'][section]['articles'].length > 0) {
+        table.push([{ colSpan: 6, text: this.devisForm.value['section'][section]['name'], style: "sectionHeader", border: [false, false, false, true] }])
+        for (var article in this.devisForm.value['section'][section]['articles']) {
+          const currentArticle = this.devisForm.value['section'][section]['articles'][article];
+          var price = currentArticle['quantity'] * currentArticle['article']['price']
+          subprice += price ? price : 0;
+          const border = [false, true, false, false];
+          table.push(
+            // Article
+            [{ text: currentArticle['article']['label'], border: border, style: "articleLabel" },
+            { text: currentArticle['market_type'] ? this.marketType.filter((myObj => myObj.id == currentArticle['market_type']))[0].acronym : '', border: border, style: "tableContent" },
+            { text: this.formatNumber(currentArticle['quantity']), noWrap: true, border: border, alignment: 'right', style: "tableContent" },
+            { text: currentArticle['article']['unit'], border: border, alignment: 'right', style: "tableContent" },
+            { text: this.formatNumber(currentArticle['article']['price']) + '€', border: border, alignment: 'right', style: "tableContent" },
+            { text: this.formatNumber(price) + '€', border: border, alignment: 'right', style: "tableContent" }],
+            // Comments about the Article 
+            [{ text: currentArticle['article']['description'], style: "articleComment" },
+            { colSpan: 5, text: '', style: "articleComment" }])
+        }
+
+        totalPrice += subprice ? subprice : 0;
+        // Section's Subprice
         table.push(
-          // Article
-          [{ text: currentArticle['article']['label'], border: border, style: "articleLabel" },
-          { text: currentArticle['market_type'] ? this.marketType.filter((myObj => myObj.id == currentArticle['market_type']))[0].acronym : '', border: border, style: "tableContent" },
-          { text: this.formatNumber(currentArticle['quantity']), noWrap: true, border: border, alignment: 'right', style: "tableContent" },
-          { text: currentArticle['article']['unit'], border: border, alignment: 'right', style: "tableContent" },
-          { text: this.formatNumber(currentArticle['article']['price']) + '€', border: border, alignment: 'right', style: "tableContent" },
-          { text: this.formatNumber(price) + '€', border: border, alignment: 'right', style: "tableContent" }],
-          // Comments about the Article 
-          [{ text: currentArticle['article']['description'], style: "articleComment" },
-          { colSpan: 5, text: '', style: "articleComment" }])
+          [{ text: '', border: [false, true, false, false] },
+          { text: '', border: [false, true, false, false] },
+          { text: '', border: [false, true, false, false] },
+          { text: '', border: [false, true, false, false] },
+          { text: 'Sous-total', style: "tableContent", noWrap: true, alignment: 'right', border: [false, true, false, false], bold: true },
+          { text: this.formatNumber(subprice) + '€', style: "tableContent", alignment: 'right', border: [false, true, false, false] }])
       }
-      totalPrice += subprice ? subprice : 0;
-      // Section's Subprice
-      table.push(
-        [{ text: '', border: [false, true, false, false] },
-        { text: '', border: [false, true, false, false] },
-        { text: '', border: [false, true, false, false] },
-        { text: '', border: [false, true, false, false] },
-        { text: 'Sous-total', style: "tableContent", noWrap: true, alignment: 'right', border: [false, true, false, false], bold: true },
-        { text: this.formatNumber(subprice) + '€', style: "tableContent", alignment: 'right', border: [false, true, false, false] }])
     }
     // The four last rows
     table.push([{ colSpan: 6, text: '\n' }],
@@ -669,7 +672,6 @@ export class DevisComponent implements OnInit {
         });
   }
 
-
   getCustomers() {
     this.customerService.getAll()
       .subscribe(
@@ -713,7 +715,6 @@ export class DevisComponent implements OnInit {
           console.log(error);
         });
   }
-
 
   getCities() {
     this.cityService.getAll()
